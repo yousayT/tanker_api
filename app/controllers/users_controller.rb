@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
-  protect_from_forgery
-
+  skip_before_action :set_current_user, [:login], raise: false
 
   def create
     @user = User.new(name: params[:name], password: params[:password])
