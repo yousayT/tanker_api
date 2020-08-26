@@ -4,4 +4,6 @@ class ApplicationController < ActionController::API
   def set_current_user
     @current_user = User.find_by(token: params[:token])
   end
+
+
 end
