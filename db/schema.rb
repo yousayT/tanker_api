@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_25_031334) do
+ActiveRecord::Schema.define(version: 2020_08_27_072850) do
 
   create_table "follows", force: :cascade do |t|
     t.integer "follower_id"
@@ -36,7 +36,6 @@ ActiveRecord::Schema.define(version: 2020_08_25_031334) do
 
   create_table "users", force: :cascade do |t|
     t.string "name"
-    t.string "password"
     t.boolean "is_admin", default: false
     t.string "uid"
     t.string "image_name", default: "default.jpg"
@@ -44,6 +43,7 @@ ActiveRecord::Schema.define(version: 2020_08_25_031334) do
     t.string "token"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "password_digest"
   end
 
   add_foreign_key "follows", "users", column: "followee_id"
