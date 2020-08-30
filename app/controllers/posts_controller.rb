@@ -8,14 +8,10 @@ class PostsController < ApplicationController
   end
 
   def create
-    if !@current_user
-      puts 'okokokoko'
-    else
-      puts @current_user
-      @post = Post.new(content: params[:content], user_id: @current_user.id)
-      @post.save
-      render json: @post
-    end
+    puts @current_user
+    @post = Post.new(content: params[:content], user_id: @current_user.id)
+    @post.save
+    render json: @post
   end
 
   def show
