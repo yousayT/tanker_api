@@ -8,6 +8,7 @@ class PostsController < ApplicationController
   end
 
   def create
+    puts @current_user
     @post = Post.new(content: params[:content], user_id: @current_user.id)
     @post.save
     render json: @post

@@ -1,12 +1,10 @@
 class UsersController < ApplicationController
-  skip_before_action :set_current_user, [:login], raise: false
 
   def create
-    @user = User.new(name: params[:name], password: params[:password])
+    #あとでuser_paramsに変える
+    @user = User.new(uid: params[:uid],name: params[:name], password: params[:password], password_confirmation: params[:password_confirmation])
     @user.save
-    # あとでPost一覧に指定　→　redirect_to("/users/#{@user.id}")
-    session[:user_id] = @user.id
-    @current_user = @user
+    session[:token] = @user.id
     render json: {
       user: @user,
       token: @user.token
@@ -34,22 +32,44 @@ class UsersController < ApplicationController
     }
   end
 
-
   def login
-    @user = User.find_by(uid: params[:uid], password: params[:password])
-    if @user
-      @current_user = @user.id
+    @user = User.find_by(uid: params[:uid])
+    if @user&.authenticate(params[:password])
+      session[:user_id] = @user.id
+      puts 'yaaaaaaay'
+      puts session[:user_id]
+      #ここまで出力される=sessionにちゃんと入ってる
       render json: {
-        user: @user,
-        token: @user.token
+        user: @user
       }
     else
-      render status: 401
+      render json: {
+        status: 401
+      }
     end
   end
 
+  # def login
+  #   @user = User.find_by(uid: params[:uid], password: params[:password])
+  #   if @user
+  #     @current_user = @user.id
+  #     render json: {
+  #       user: @user,
+  #       token: @user.token
+  #     }
+  #   else
+  #     render status: 401
+  #   end
+  # end
+
   def logout
     session[:user_id] = nil
+    @current_user = nil
+  end
+
+  private
+  def user_params
+    params.require(:user).permit(:name, :uid, :password, :password_confirmation)
   end
 
 end

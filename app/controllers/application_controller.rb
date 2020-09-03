@@ -1,9 +1,14 @@
 class ApplicationController < ActionController::API
-  before_action :set_current_user
+  include ActionController::Helpers
+  before_action :current_user
+  helper_method :current_user
 
-  def set_current_user
-    @current_user = User.find_by(token: params[:token])
+  def current_user
+    if session[:user_id]
+      @current_user ||= User.find_by(id: session[:user_id])
+    else
+      puts 'No currentUser'
+    end
   end
-
 
 end
