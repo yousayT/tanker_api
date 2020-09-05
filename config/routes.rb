@@ -10,7 +10,6 @@ Rails.application.routes.draw do
     get "users/:id/follower" => "follows#follower_index"
     get "users/:id/followee" => "follows#followee_index"
 
-    get "posts/index" => "posts#index"
     get "posts/new" => "posts#new"
     post "posts/create" => "posts#create"
     get "posts/:id" => "posts#show"
@@ -18,5 +17,6 @@ Rails.application.routes.draw do
     post "posts/:id/update" => "posts#update"
     post "posts/:id/destroy" => "posts#destroy"
     post "posts/:id/like" => "posts#like"
+    get "posts/:id/timeline" => "follows#timeline"
     # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
