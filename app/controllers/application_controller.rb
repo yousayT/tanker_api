@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::API
   include ActionController::Helpers
+  include ActionController::RequestForgeryProtection
   before_action :current_user
   helper_method :current_user
 
@@ -9,6 +10,9 @@ class ApplicationController < ActionController::API
     else
       puts 'No currentUser'
     end
+  end
+
+  def protect_from_forgery
   end
 
 end
