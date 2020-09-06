@@ -16,15 +16,16 @@
 end
 
 [
-  ["content1", 1],
-  ["content2", 2],
-  ["content3", 3],
-  ["content4", 1],
-  ["content5", 2],
-  ["content6", 3],
-  ["content7", 1],
+  ["content1", 9],
+  ["content2", 8],
+  ["content3", 7],
+  ["content4", 6],
+  ["content5", 5],
+  ["content6", 4],
+  ["content7", 3],
   ["content8", 2],
-  ["content9", 3],
+  ["content9", 1],
+  ["content10", 1]
 ].each do |content, user_id|
   Post.create!(
     {content: content, user_id: user_id}

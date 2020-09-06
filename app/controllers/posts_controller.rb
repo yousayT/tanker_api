@@ -1,11 +1,4 @@
 class PostsController < ApplicationController
-  def index
-    #postmanチェック済み（2020/08/23）
-    @posts = Post.limit(30).order(created_at: :desc)
-    render json: {
-      posts: @posts
-    }
-  end
 
   def create
     puts @current_user
