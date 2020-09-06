@@ -1,4 +1,5 @@
 class FollowsController < ApplicationController
+  before_action :authenticate_user
 
   def create
     #postmanチェック済み（2020/08/24）
@@ -37,4 +38,5 @@ class FollowsController < ApplicationController
       posts: @posts,
     }
   end
+  
 end

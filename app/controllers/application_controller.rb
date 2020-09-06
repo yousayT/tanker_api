@@ -12,6 +12,15 @@ class ApplicationController < ActionController::API
     end
   end
 
+  def authenticate_user
+    if @current_user == nil
+      render json: {
+        status: 401
+        #status: 401を渡すだけでいいのだろうか？まだわかってない
+      }
+    end
+  end
+
   def protect_from_forgery
   end
 
