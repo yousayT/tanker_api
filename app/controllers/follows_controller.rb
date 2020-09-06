@@ -27,7 +27,7 @@ class FollowsController < ApplicationController
 
   def timeline
     #postmanチェック済み（2020/09/05）
-    @follows = (Follow.where(follower_id: @current_user.id))
+    @follows = Follow.where(follower_id: @current_user.id)
     @followee_ids = Array.new
     @follows.each do |follow|
       @followee_ids.push(follow.followee_id)
