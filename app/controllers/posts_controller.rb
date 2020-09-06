@@ -5,8 +5,8 @@ class PostsController < ApplicationController
     #postmanチェック済み（2020/09/07）
     @post = Post.new(content: params[:content], user_id: @current_user.id)
     #フロントからタグの名前の配列が来ることを想定（例：　tag_name: ["tag1", "tag2", ... , "tagn"]）
-    tag_names = params.permit(tag_name:[])
-    tag_names[:tag_name].each do |tag_name|
+    tag_names = params.permit(tag_names:[])
+    tag_names[:tag_names].each do |tag_name|
       @post.tag_list.add(tag_name)
     end
     @post.save
