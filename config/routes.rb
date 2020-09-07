@@ -12,11 +12,11 @@ Rails.application.routes.draw do
 
     get "posts/new" => "posts#new"
     post "posts/create" => "posts#create"
+    get "posts/timeline" => "follows#timeline"
     get "posts/:id" => "posts#show"
     get "posts/:id/edit" => "posts#edit"
     post "posts/:id/update" => "posts#update"
     post "posts/:id/destroy" => "posts#destroy"
     post "posts/:id/like" => "posts#like"
-    get "posts/timeline" => "follows#timeline"
     # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
