@@ -23,16 +23,6 @@ class PostsController < ApplicationController
     }
   end
 
-  def edit
-    @post = Post.find_by(id: params[:id])
-    render json: @post
-  end
-
-  def update
-    @post = Post.find_by(id: params[:id])
-    @post.content = params[:content]
-    @post.save
-  end
 
   def destroy
     @post = Post.find_by(id: params[:id])
