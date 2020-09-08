@@ -1,4 +1,6 @@
 class PostsController < ApplicationController
+  before_action :authenticate_user
+  before_action :check_user, only: :destroy
 
   def create
     # puts @current_user
@@ -37,6 +39,15 @@ class PostsController < ApplicationController
     @post = Post.find_by(id: params[:post_id])
     @post.likes_count = params[likes_count]
     @post.save
+  end
+
+  def check_user
+    if Post.find_by(id: params[:id]).user_id != @current_user.id
+      render json:{
+        #これであってる？
+        status: 403
+      }
+    end
   end
 
 end

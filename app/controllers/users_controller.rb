@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_action :authenticate_user, only: [:show, :logout]
 
   def create
     #あとでuser_paramsに変える
