@@ -35,6 +35,7 @@ class UsersController < ApplicationController
   end
 
   def update
+    #postmanチェック済み（2020/09/09）
     @current_user.update_attributes(user_params)
     # 変更前のパスワードが入力されていたら
     if params[:old_password]
@@ -108,10 +109,7 @@ class UsersController < ApplicationController
       render json:{
         status: 403
       }
-<<<<<<< HEAD
     end
-=======
->>>>>>> 3e06245f4c305a0ae264c3fe5f94e7822f618ebe
   end
 
   private
