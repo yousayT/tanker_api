@@ -108,7 +108,10 @@ class UsersController < ApplicationController
       render json:{
         status: 403
       }
+<<<<<<< HEAD
     end
+=======
+>>>>>>> 3e06245f4c305a0ae264c3fe5f94e7822f618ebe
   end
 
   private
