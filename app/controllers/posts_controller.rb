@@ -6,15 +6,11 @@ class PostsController < ApplicationController
     # puts @current_user
     #postmanチェック済み（2020/09/07）
     @post = Post.new(content: params[:content], user_id: @current_user.id)
-    #フロントからタグの名前の配列が来ることを想定（例：　tag_name: ["tag1", "tag2", ... , "tagn"]）
-    # tag_names = params.permit(tag_names:[])
-    # tag_names[:tag_names].each do |tag_name|
-    #   @post.tag_list.add(tag_name)
-    # end
-    if params[:tag_list]
-      tag_names = params[:tag_list]
-      tag_names.each do |tag|
-        @post.tag_list.add(tag)
+    #フロントからタグの名前の配列が来ることを想定（例：　tag_list: ["tag1", "tag2", ... , "tagn"]）
+    tag_names = params.permit(tag_list:[])
+    if tag_names
+      tag_names[:tag_list].each do |tag_name|
+        @post.tag_list.add(tag_name)
       end
     end
     @post.save
