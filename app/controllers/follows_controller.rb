@@ -4,6 +4,10 @@ class FollowsController < ApplicationController
   def create
     #postmanチェック済み（2020/08/24）
     @follow = Follow.new(follower_id: @current_user.id, followee_id: params[:id])
+    # current_userのフォロー数を1増やす
+    User.find_by(id: @current_user.id).followee_count += 1
+    # フォローされたユーザのフォロワー数を1増やす
+    User.find_by(id: params[:id]).follower_count +=1
     @follow.save
     render json: @follow
   end
@@ -11,6 +15,10 @@ class FollowsController < ApplicationController
   def destroy
     #postmanチェック済み(2020/08/24)
     @follow = Follow.find_by(follower_id: @current_user.id, followee_id: params[:id])
+    # current_userのフォロー数を1減らす
+    User.find_by(id: @current_user.id).followee_count -= 1
+    # フォローされていたユーザのフォロワー数を1減らす
+    User.find_by(id: params[:id]).follower_count -= 1
     @follow.destroy
   end
 
@@ -38,7 +46,5 @@ class FollowsController < ApplicationController
       posts: @posts,
     }
   end
-  
+
 end
-
-
