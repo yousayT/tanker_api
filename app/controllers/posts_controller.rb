@@ -11,9 +11,11 @@ class PostsController < ApplicationController
     # tag_names[:tag_names].each do |tag_name|
     #   @post.tag_list.add(tag_name)
     # end
-    tag_names = params[:tag_list]
-    tag_names.each do |tag|
-      @post.tag_list.add(tag)
+    if params[:tag_list]
+      tag_names = params[:tag_list]
+      tag_names.each do |tag|
+        @post.tag_list.add(tag)
+      end
     end
     @post.save
     render json: {
