@@ -54,7 +54,7 @@ class FollowsController < ApplicationController
     end
     @posts = Post.where(created_at: Time.current.ago(3.month)..Time.current, user_id: @followee_ids).order('created_at DESC')
     render json: {
-      posts: @posts,
+      posts: @posts
     }
   end
 
