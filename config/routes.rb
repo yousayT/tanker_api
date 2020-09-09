@@ -2,6 +2,7 @@ Rails.application.routes.draw do
 
     post "users/create" => "users#create"
     get "users/:id" => "users#show"
+    post "users/:id/update" => "users#update"
     post "login" => "users#login"
     post "logout" => "users#logout"
 
