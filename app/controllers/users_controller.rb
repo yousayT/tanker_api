@@ -37,22 +37,24 @@ class UsersController < ApplicationController
 
   def update
     #postmanチェック済み（2020/09/09）
-    @current_user.update_attributes(user_params)
+    # ここで予想されているパラメータは、"user": {"name": "hogehoge", "uid": "fugafuga", ...}の形
     # 変更前のパスワードが入力されていたら
-    if params[:old_password]
+    if params[:user][:old_password].present?
       # かつそのパスワードが正しかったら
-      if @current_user.authenticate(params[:old_password])
-        # パスワードを変更
-        @current_user.password = params[:new_password]
-        @current_user.password_confirmation = params[:new_password_confirmation]
-        # 新しいパスワードの保存に失敗した時
-        if !@current_user.save
+      if @current_user.authenticate(params[:user][:old_password])
+        # 新しいパスワードを含むユーザ情報の更新に成功した時
+        if @current_user.update_attributes(user_params)
+          render json:{
+            user: @current_user
+          }
+        # 新しいパスワードを含むユーザ情報の更新に失敗した時
+        else
           render json:{
             status: 400,
             error_messages: @current_user.errors.full_messages
           }
         end
-      # パスワードが正しくなかったら
+      # 入力されたパスワードが正しくなかったら
       else
         render json:{
           status: 401
@@ -60,9 +62,14 @@ class UsersController < ApplicationController
       end
     # 変更前のパスワードが入力されていなかったら
     else
-      # パスワード以外の情報を保存し、それに失敗したら
-      if !@current_user.save
+      # ユーザ情報の更新に成功した時
+      if @current_user.update_attributes(user_params)
         render json:{
+          user: @current_user
+        }
+      # ユーザ情報の更新に失敗した時
+      else
+        render json: {
           status: 400,
           error_messages: @current_user.errors.full_messages
         }
@@ -106,7 +113,7 @@ class UsersController < ApplicationController
   end
 
   def check_user
-    if params[:id] != @current_user.id
+    if params[:id].to_i != @current_user.id
       render json:{
         status: 403
       }
