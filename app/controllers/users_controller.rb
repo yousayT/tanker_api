@@ -28,8 +28,43 @@ class UsersController < ApplicationController
       user: @user,
       token: @user.token,
       posts: @posts,
-      liked_posts: @liked_posts #いいねした投稿の一覧表示
+      #いいねした投稿の一覧表示
+      liked_posts: @liked_posts
     }
+  end
+
+  def update
+    @current_user.update_attributes(user_params)
+    # 変更前のパスワードが入力されていたら
+    if params[:old_password]
+      # かつそのパスワードが正しかったら
+      if @current_user.authenticate(params[:old_password])
+        # パスワードを変更
+        @current_user.password = params[:new_password]
+        @current_user.password_confirmation = params[:new_password_confirmation]
+        # 新しいパスワードの保存に失敗した時
+        if !@current_user.save
+          render json:{
+            status: 400,
+            error_messages: @current_user.errors.full_messages
+          }
+        end
+      # パスワードが正しくなかったら
+      else
+        render json:{
+          status: 401
+        }
+      end
+    # 変更前のパスワードが入力されていなかったら
+    else
+      # パスワード以外の情報を保存し、それに失敗したら
+      if !@current_user.save
+        render json:{
+          status: 400,
+          error_messages: @current_user.errors.full_messages
+        }
+      end
+    end
   end
 
   def login
@@ -69,7 +104,7 @@ class UsersController < ApplicationController
 
   private
   def user_params
-    params.require(:user).permit(:name, :uid, :password, :password_confirmation)
+    params.require(:user).permit(:name, :uid, :image_name, :profile, :password, :password_confirmation)
   end
 
 end
