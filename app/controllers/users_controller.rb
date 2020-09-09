@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_action :check_user, only: :update
 
   def create
     #あとでuser_paramsに変える
@@ -100,6 +101,14 @@ class UsersController < ApplicationController
   def logout
     session[:user_id] = nil
     @current_user = nil
+  end
+
+  def check_user
+    if params[:id] != @current_user.id
+      render json:{
+        status: 403
+      }
+    end
   end
 
   private
