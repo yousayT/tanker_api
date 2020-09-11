@@ -72,6 +72,7 @@ class FollowsController < ApplicationController
     @follows.each do |follow|
       @followee_ids.push(follow.followee_id)
     end
+    @followee_ids.push(@current_user.id)
     @posts = Post.where(created_at: Time.current.ago(3.month)..Time.current, user_id: @followee_ids).order('created_at DESC')
     render json: {
       posts: @posts
