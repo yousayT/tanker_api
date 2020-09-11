@@ -20,10 +20,14 @@ class PostsController < ApplicationController
   end
 
   def show
-    #postmanチェック済み（2020/08/23）
+    #postmanチェック済み（2020/09/11）
     @post = Post.find_by(id: params[:id])
+    @user = User.find_by(id: @post.user_id)
+    # 投稿そのものとその投稿に紐づいたユーザ情報、プロフィール画像のソースを返す
     render json: {
-      post: @post
+      post: @post,
+      user: @user,
+      image_src: @user.image_name.url
     }
   end
 
