@@ -66,15 +66,25 @@ class FollowsController < ApplicationController
   end
 
   def timeline
-    #postmanチェック済み（2020/09/05)
+    #postmanチェック済み(2020/09/11)
+    # ログインユーザがフォローしているユーザidを配列で取得
     @follows = Follow.where(follower_id: @current_user.id)
     @followee_ids = Array.new
     @follows.each do |follow|
       @followee_ids.push(follow.followee_id)
     end
+    # フォローしているユーザidの配列にログインユーザのidを追加
+    @followee_ids.push(@current_user.id)
+    # IN句を使って投稿を配列で取得
     @posts = Post.where(created_at: Time.current.ago(3.month)..Time.current, user_id: @followee_ids).order('created_at DESC')
+    # 各postにuser_nameを追加
+    @posts_has_user_info = Array.new
+    @posts.each do |post|
+      @posts_has_user_info.push(fetch_user_info_from_post(post))
+    end
+    # user_nameの入ったpostを返す
     render json: {
-      posts: @posts
+      posts: @posts_has_user_info
     }
   end
 
