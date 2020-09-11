@@ -24,4 +24,11 @@ class ApplicationController < ActionController::API
   def protect_from_forgery
   end
 
+  def fetch_user_info_from_post(post)
+    #postmanチェック済み（2020/09/11）
+    user = User.find_by(id: post.user_id)
+    # postのデータとユーザ名、プロフィール画像を返す
+    return [post, {user_name: user.name, img_src: user.image_name.url}]
+  end
+
 end
