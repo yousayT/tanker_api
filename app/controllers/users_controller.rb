@@ -14,7 +14,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    #postmanチェック済み（2020/08/23）
+    #postmanチェック済み（2020/09/11）
     @user = User.find_by(id: params[:id])
     @posts = Post.where(user_id: params[:id]).order(created_at: :desc)
     @likes = Like.where(user_id: params[:id]).order(created_at: :desc)
@@ -28,6 +28,7 @@ class UsersController < ApplicationController
     end
       render json: {
       user: @user,
+      image_src: @user.image_name.url,
       token: @user.token,
       posts: @posts,
       #いいねした投稿の一覧表示
