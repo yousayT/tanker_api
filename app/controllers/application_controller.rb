@@ -36,7 +36,7 @@ class ApplicationController < ActionController::API
   end
 
   def is_follow?(user)
-    if Follow.find_by(follower_id: user.id, followee_id: @current_user)
+    if Follow.find_by(follower_id: @current_user, followee_id: user.id)
       return true
     else
       return false
