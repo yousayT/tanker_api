@@ -38,6 +38,8 @@ class UsersController < ApplicationController
     render json: {
     #(このtokenはそのうち消すかも)
     token: @user.token,
+    followee_id: params[:id],
+    follow_status: is_follow?(@user),
     user: @user,
     posts: @posts_has_user_info,
     #いいねした投稿の一覧表示
