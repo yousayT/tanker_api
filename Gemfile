@@ -41,3 +41,5 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'acts-as-taggable-on', '6.5.0'
+
+gem 'carrierwave', '~> 2.0'

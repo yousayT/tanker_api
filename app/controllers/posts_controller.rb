@@ -20,10 +20,12 @@ class PostsController < ApplicationController
   end
 
   def show
-    #postmanチェック済み（2020/08/23）
+    #postmanチェック済み（2020/09/11）
     @post = Post.find_by(id: params[:id])
+    @user = User.find_by(id: @post.user_id)
+    # 投稿そのものとその投稿に紐づいたユーザ情報、プロフィール画像のソースを返す
     render json: {
-      post: @post
+      post: fetch_user_info_from_post(@post)
     }
   end
 
@@ -34,9 +36,29 @@ class PostsController < ApplicationController
   end
 
   def like
-    @post = Post.find_by(id: params[:post_id])
-    @post.likes_count = params[likes_count]
+    # Likesテーブルにuser_id, post_idのセット作成
+    @like = Like.new(user_id: @current_user.id, post_id: params[:id])
+    @like.save
+    # いいねカウントを1増やす
+    @post = Post.find_by(id: params[:id])
+    @post.likes_count += 1
     @post.save
+    render json: {
+      post: @post
+    }
+  end
+
+  def unlike
+    # Likesテーブルのuser_id, post_idのセットを削除
+    @like = Like.find_by(user_id: @current_user.id, post_id: params[:id])
+    @like.destroy
+    # いいねカウントを1減らす
+    @post = Post.find_by(id: params[:id])
+    @post.likes_count -= 1
+    @post.save
+    render json: {
+      post: @post
+    }
   end
 
   def check_user
