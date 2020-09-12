@@ -6,7 +6,7 @@ class UsersController < ApplicationController
     #あとでuser_paramsに変える
     @user = User.new(uid: params[:uid],name: params[:name], password: params[:password], password_confirmation: params[:password_confirmation])
     @user.save
-    session[:token] = @user.id
+    session[:user_id] = @user.id
     render json: {
       user: @user,
       token: @user.token
