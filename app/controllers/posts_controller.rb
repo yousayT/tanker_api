@@ -9,7 +9,7 @@ class PostsController < ApplicationController
     #フロントからタグの名前の配列が来ることを想定（例：　tag_list: ["tag1", "tag2", ... , "tagn"]）
     tag_names = params.permit(tag_list:[])
     if tag_names
-      tag_names[:tag_list].each do |tag_name|
+      tag_names.each do |tag_name|
         @post.tag_list.add(tag_name)
       end
     end
