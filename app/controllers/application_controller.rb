@@ -35,4 +35,12 @@ class ApplicationController < ActionController::API
     return post_hash
   end
 
+  def is_follow?(user)
+    if Follow.find_by(follower_id: user.id, followee_id: @current_user)
+      return true
+    else
+      return false
+    end
+  end
+
 end
