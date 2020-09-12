@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   has_secure_token
   has_secure_password
+  mount_uploader :image_name, UserImageUploader
 
   has_many :posts, dependent: :destroy
   has_many :likes

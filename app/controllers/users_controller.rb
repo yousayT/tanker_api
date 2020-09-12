@@ -14,24 +14,36 @@ class UsersController < ApplicationController
   end
 
   def show
-    #postmanチェック済み（2020/08/23）
+    #postmanチェック済み（2020/09/11）
+    # :idからユーザ情報を入手
     @user = User.find_by(id: params[:id])
-    @posts = Post.where(user_id: params[:id]).order(created_at: :desc)
-    @likes = Like.where(user_id: params[:id]).order(created_at: :desc)
+    # そのユーザの投稿を全て取得し、各投稿にユーザ名とプロフィール画像を紐付け
+    @posts = Post.where(user_id: params[:id]).order('created_at DESC')
+    @posts_has_user_info = Array.new
+    @posts.each do |post|
+      @posts_has_user_info.push(fetch_user_info_from_post(post))
+    end
+    @likes = Like.where(user_id: params[:id]).order('created_at DESC')
+    # そのユーザがいいねをしていた場合、いいねした投稿を全て取得し、各投稿にユーザ名とプロフィール画像を紐付け
     if (@likes)
-      @liked_posts = Array.new
+      @liked_posts_has_user_info = Array.new
       @likes.each do |like|
-        @liked_posts.push(Post.find_by(id: like.post_id))
+        @liked_posts_has_user_info.push(fetch_user_info_from_post(Post.find_by(id: like.post_id)))
       end
+    # いいねをしていなかった場合、nilを返す
     else
       @liked_posts = nil
     end
-      render json: {
-      user: @user,
-      token: @user.token,
-      posts: @posts,
-      #いいねした投稿の一覧表示
-      liked_posts: @liked_posts
+    # ユーザ情報、そのユーザの全投稿、そのユーザがいいねした全ての投稿を返す
+    render json: {
+    #(このtokenはそのうち消すかも)
+    token: @user.token,
+    followee_id: params[:id],
+    follow_status: is_follow?(@user),
+    user: @user,
+    posts: @posts_has_user_info,
+    #いいねした投稿の一覧表示
+    liked_posts: @liked_posts_has_user_info
     }
   end
 
