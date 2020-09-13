@@ -11,7 +11,6 @@ Rails.application.routes.draw do
     get "users/:id/follower" => "follows#follower_index"
     get "users/:id/followee" => "follows#followee_index"
 
-    get "posts/new" => "posts#new"
     post "posts/create" => "posts#create"
     get "posts/timeline" => "follows#timeline"
     get "posts/:id" => "posts#show"
