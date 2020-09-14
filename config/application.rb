@@ -32,8 +32,12 @@ module Tanker
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
-    
+
     # trueをfalseに変更 by Lin
     config.api_only = false
+
+    # 標準時を日本時間に変更
+    config.time_zone = "Tokyo"
+    config.active_record.default_timezone = :local
   end
 end
