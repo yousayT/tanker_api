@@ -27,6 +27,8 @@ class UsersController < ApplicationController
     #postmanチェック済み（2020/09/11）
     # :idからユーザ情報を入手
     @user = User.find_by(id: params[:id])
+    # そのユーザのフォロワー数を取得
+    @follower_count = Follow.where(followee_id: params[:id]).count
     # そのユーザの投稿を全て取得し、各投稿にユーザ名とプロフィール画像を紐付け
     @posts = Post.where(user_id: params[:id]).order('created_at DESC')
     @posts_has_user_info = Array.new
@@ -45,6 +47,7 @@ class UsersController < ApplicationController
       @liked_posts = nil
     end
     # ユーザ情報、そのユーザの全投稿、そのユーザがいいねした全ての投稿を返す
+    # ユーザのフォロワー数も追加（by Rintaro Fujii 9/14）
     render json: {
     #(このtokenはそのうち消すかも)
     token: @user.token,
@@ -53,7 +56,9 @@ class UsersController < ApplicationController
     user: @user,
     posts: @posts_has_user_info,
     #いいねした投稿の一覧表示
-    liked_posts: @liked_posts_has_user_info
+    liked_posts: @liked_posts_has_user_info,
+    #フォロワー数
+    follower_count: @follower_count
     }
   end
 

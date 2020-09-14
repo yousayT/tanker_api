@@ -16,13 +16,15 @@ class FollowsController < ApplicationController
       # ログインユーザの情報と、フォローをしているというステータスを返す
       render json: {
         user: @current_user,
-        follow_status: true
+        follow_status: true,
+        follower_count: followee.follower_count
       }
     else
       render json:{
         status: 400,
         error_messages: @follow.errors.full_messages
       }
+    end
   end
 
   def destroy
@@ -40,13 +42,15 @@ class FollowsController < ApplicationController
       # ログインユーザの情報と、フォローをしていないというステータスを返す
       render json: {
         user: @current_user,
-        status: false
+        status: false,
+        follower_count: followee.follower_count
       }
     else
       render json:{
         status: 400,
         error_messages: @follow.errors.full_messages
       }
+    end
   end
 
   def follower_index
