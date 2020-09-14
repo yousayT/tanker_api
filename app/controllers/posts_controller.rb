@@ -13,10 +13,16 @@ class PostsController < ApplicationController
         @post.tag_list.add(tag_name)
       end
     end
-    @post.save
-    render json: {
+    if @post.save
+      render json: {
         post: @post
       }
+    else
+      render json: {
+        status: 400,
+        error_messages: @post.errors.full_messages
+      }
+    end
   end
 
   def show
