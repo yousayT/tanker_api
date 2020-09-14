@@ -44,6 +44,7 @@ class PostsController < ApplicationController
   def like
     # Likesテーブルにuser_id, post_idのセット作成
     @like = Like.new(user_id: @current_user.id, post_id: params[:id])
+    # いいね情報の保存に成功した時
     if @like.save
       # いいねカウントを1増やす
       @post = Post.find_by(id: params[:id])
@@ -52,6 +53,7 @@ class PostsController < ApplicationController
       render json: {
         post: @post
       }
+    # いいね情報の保存に失敗した時
     else
       render json: {
         status: 409,
@@ -62,6 +64,7 @@ class PostsController < ApplicationController
 
   def unlike
     # Likesテーブルのuser_id, post_idのセットを削除
+    # 該当のいいね情報が見つかった時
     if @like = Like.find_by(user_id: @current_user.id, post_id: params[:id])
       @like.destroy
       # いいねカウントを1減らす
@@ -71,6 +74,7 @@ class PostsController < ApplicationController
       render json: {
         post: @post
       }
+    # 該当のいいね情報が見つからなかった時
     else
       render json: {
         status: 404

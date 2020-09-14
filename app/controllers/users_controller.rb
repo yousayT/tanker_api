@@ -3,14 +3,24 @@ class UsersController < ApplicationController
   before_action :check_user, only: [:update, :destroy]
 
   def create
-    #あとでuser_paramsに変える
-    @user = User.new(uid: params[:uid],name: params[:name], password: params[:password], password_confirmation: params[:password_confirmation])
-    @user.save
-    session[:user_id] = @user.id
-    render json: {
-      user: @user,
-      token: @user.token
-    }
+    @user = User.new(user_params)
+    # @userの保存に成功したら
+    if @user.save
+      # sessionにuser_idを入れてログイン状態にする
+      session[:user_id] = @user.id
+      # フロントにログインユーザのデータを返す
+      render json: {
+        user: @user,
+        token: @user.token
+      }
+    # @userの保存に失敗したら
+    else
+      # HTTPステータスコード400を返して、バリデーションに弾かれていた場合その内容も返す
+      render json: {
+        status: 400,
+        error_messages: @user.errors.full_messages
+      }
+    end
   end
 
   def show
@@ -35,6 +45,7 @@ class UsersController < ApplicationController
       @liked_posts = nil
     end
     # ユーザ情報、そのユーザの全投稿、そのユーザがいいねした全ての投稿を返す
+    # ユーザのフォロワー数も追加（by Rintaro Fujii 9/14）
     render json: {
     #(このtokenはそのうち消すかも)
     token: @user.token,
@@ -43,7 +54,11 @@ class UsersController < ApplicationController
     user: @user,
     posts: @posts_has_user_info,
     #いいねした投稿の一覧表示
-    liked_posts: @liked_posts_has_user_info
+    liked_posts: @liked_posts_has_user_info,
+    #フォロワー数
+    follower_count: @user.follower_count,
+    #フォロー数
+    follow_count: @user.followee_count
     }
   end
 
