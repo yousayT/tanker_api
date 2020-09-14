@@ -45,6 +45,7 @@ class UsersController < ApplicationController
       @liked_posts = nil
     end
     # ユーザ情報、そのユーザの全投稿、そのユーザがいいねした全ての投稿を返す
+    # ユーザのフォロワー数も追加（by Rintaro Fujii 9/14）
     render json: {
     #(このtokenはそのうち消すかも)
     token: @user.token,
@@ -53,7 +54,11 @@ class UsersController < ApplicationController
     user: @user,
     posts: @posts_has_user_info,
     #いいねした投稿の一覧表示
-    liked_posts: @liked_posts_has_user_info
+    liked_posts: @liked_posts_has_user_info,
+    #フォロワー数
+    follower_count: @user.follower_count,
+    #フォロー数
+    follow_count: @user.followee_count
     }
   end
 
