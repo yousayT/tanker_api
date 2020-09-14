@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :authenticate_user, only: [:show, :update, :logout]
-  before_action :check_user, only: :update
+  before_action :authenticate_user, only: [:show, :update, :logout, :destroy]
+  before_action :check_user, only: [:update, :destroy]
 
   def create
     #あとでuser_paramsに変える
@@ -122,6 +122,11 @@ class UsersController < ApplicationController
   def logout
     session[:user_id] = nil
     @current_user = nil
+  end
+
+  def destroy
+    session[:user_id] = nil
+    @current_user.destroy
   end
 
   def check_user

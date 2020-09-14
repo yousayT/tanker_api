@@ -5,13 +5,13 @@ Rails.application.routes.draw do
     post "users/:id/update" => "users#update"
     post "login" => "users#login"
     post "logout" => "users#logout"
+    post "users/:id/destroy" => "users#destroy"
 
     post "users/:id/follow" => "follows#create"
     post "users/:id/remove" => "follows#destroy"
     get "users/:id/follower" => "follows#follower_index"
     get "users/:id/followee" => "follows#followee_index"
 
-    get "posts/new" => "posts#new"
     post "posts/create" => "posts#create"
     get "posts/timeline" => "follows#timeline"
     get "posts/:id" => "posts#show"
