@@ -3,34 +3,47 @@ class FollowsController < ApplicationController
 
   def create
     #postmanチェック済み（2020/09/10）
-    @follow = Follow.new(follower_id: @current_user.id, followee_id: params[:id])
-    # current_userのフォロー数を1増やす
-    @current_user.followee_count += 1
-    @current_user.save
-    # フォローされたユーザのフォロワー数を1増やす
-    followee = User.find_by(id: params[:id])
-    followee.follower_count += 1
-    followee.save
-    @follow.save
-    render json: {
-      user: @current_user
-    }
+    # 該当するフォローデータ
+    if @follow = Follow.new(follower_id: @current_user.id, followee_id: params[:id])
+      # current_userのフォロー数を1増やす
+      @current_user.followee_count += 1
+      @current_user.save
+      # フォローされたユーザのフォロワー数を1増やす
+      followee = User.find_by(id: params[:id])
+      followee.follower_count += 1
+      followee.save
+      @follow.save
+      render json: {
+        user: @current_user
+      }
+    else
+      render json: {
+        status: 409,
+        error_messages: @follow.errors.full_messages
+      }
+    end
   end
 
   def destroy
     #postmanチェック済み(2020/09/10)
-    @follow = Follow.find_by(follower_id: @current_user.id, followee_id: params[:id])
-    # current_userのフォロー数を1減らす
-    @current_user.followee_count -= 1
-    @current_user.save
-    # フォローされていたユーザのフォロワー数を1減らす
-    followee = User.find_by(id: params[:id])
-    followee.follower_count -= 1
-    followee.save
-    @follow.destroy
-    render json: {
-      user: @current_user
-    }
+    if @follow = Follow.find_by(follower_id: @current_user.id, followee_id: params[:id])
+      # current_userのフォロー数を1減らす
+      @current_user.followee_count -= 1
+      @current_user.save
+      # フォローされていたユーザのフォロワー数を1減らす
+      followee = User.find_by(id: params[:id])
+      followee.follower_count -= 1
+      followee.save
+      @follow.destroy
+      render json: {
+        user: @current_user
+      }
+    else
+      render json: {
+        status: 409,
+        error_messages: @follow.errors.full_messages
+      }
+    end
   end
 
   def follower_index
