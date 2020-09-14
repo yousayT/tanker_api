@@ -4,16 +4,16 @@ class FollowsController < ApplicationController
   def create
     #postmanチェック済み（2020/09/10）
     @follow = Follow.new(follower_id: @current_user.id, followee_id: params[:id])
-    # current_userのフォロー数を1増やす
-    @current_user.followee_count += 1
-    @current_user.save
-    # フォローされたユーザのフォロワー数を1増やす
-    followee = User.find_by(id: params[:id])
-    followee.follower_count += 1
-    followee.save
     # フォロー情報の保存に成功した時
     if @follow.save
-      # ログインユーザの情報と、フォローをしているというステータスを返す
+      # current_userのフォロー数を1増やす
+      @current_user.followee_count += 1
+      @current_user.save
+      # フォローされたユーザのフォロワー数を1増やす
+      followee = User.find_by(id: params[:id])
+      followee.follower_count += 1
+      followee.save
+      # ログインユーザの情報と、フォローをしているというステータス、フォローされたユーザのフォロワー数を返す
       render json: {
         user: @current_user,
         follow_status: true,
@@ -21,7 +21,7 @@ class FollowsController < ApplicationController
       }
     else
       render json:{
-        status: 400,
+        status: 409,
         error_messages: @follow.errors.full_messages
       }
     end
@@ -29,26 +29,27 @@ class FollowsController < ApplicationController
 
   def destroy
     #postmanチェック済み(2020/09/10)
-    @follow = Follow.find_by(follower_id: @current_user.id, followee_id: params[:id])
-    # current_userのフォロー数を1減らす
-    @current_user.followee_count -= 1
-    @current_user.save
-    # フォローされていたユーザのフォロワー数を1減らす
-    followee = User.find_by(id: params[:id])
-    followee.follower_count -= 1
-    followee.save
-    # フォロー情報の削除に成功した時
-    if @follow.destroy
-      # ログインユーザの情報と、フォローをしていないというステータスを返す
+    # 該当のフォロー情報が見つかった時
+    if @follow = Follow.find_by(follower_id: @current_user.id, followee_id: params[:id])
+      # フォロー情報の削除に成功した時
+      @follow.destroy
+      # current_userのフォロー数を1減らす
+      @current_user.followee_count -= 1
+      @current_user.save
+      # フォローされていたユーザのフォロワー数を1減らす
+      followee = User.find_by(id: params[:id])
+      followee.follower_count -= 1
+      followee.save
+      # ログインユーザの情報と、フォローをしていないというステータス、リムーブされたユーザのフォロワー数を返す
       render json: {
         user: @current_user,
         status: false,
         follower_count: followee.follower_count
       }
+    # 該当のフォロー情報が見つからなかった時
     else
       render json:{
-        status: 400,
-        error_messages: @follow.errors.full_messages
+        status: 404
       }
     end
   end

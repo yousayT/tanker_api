@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_11_153642) do
+ActiveRecord::Schema.define(version: 2020_09_14_032733) do
 
   create_table "follows", force: :cascade do |t|
     t.integer "follower_id"
@@ -73,6 +73,4 @@ ActiveRecord::Schema.define(version: 2020_09_11_153642) do
     t.integer "followee_count", default: 0
   end
 
-  add_foreign_key "follows", "users", column: "followee_id"
-  add_foreign_key "follows", "users", column: "follower_id"
 end

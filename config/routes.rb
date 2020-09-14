@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     post "users/:id/update" => "users#update"
     post "login" => "users#login"
     post "logout" => "users#logout"
+    post "users/:id/destroy" => "users#destroy"
 
     post "users/:id/follow" => "follows#create"
     post "users/:id/remove" => "follows#destroy"

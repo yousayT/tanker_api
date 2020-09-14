@@ -64,8 +64,14 @@ end
 end
 
 10.times do |n|
-  user = User.find_by(id: n+1)
-  user.follower_count = Follow.where(followee_id: n+1).count
-  user.followee_count = Follow.where(follower_id: n+1).count
+  user = User.find_by(id: n + 1)
+  user.follower_count = Follow.where(followee_id: n + 1).count
+  user.followee_count = Follow.where(follower_id: n + 1).count
   user.save
+end
+
+10.times do |n|
+  post = Post.find_by(id: n + 1)
+  post.likes_count = Like.where(post_id: n + 1).count
+  post.save
 end
