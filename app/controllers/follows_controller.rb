@@ -11,10 +11,18 @@ class FollowsController < ApplicationController
     followee = User.find_by(id: params[:id])
     followee.follower_count += 1
     followee.save
-    @follow.save
-    render json: {
-      user: @current_user
-    }
+    # フォロー情報の保存に成功した時
+    if @follow.save
+      # ログインユーザの情報と、フォローをしているというステータスを返す
+      render json: {
+        user: @current_user,
+        follow_status: true
+      }
+    else
+      render json:{
+        status: 400,
+        error_messages: @follow.errors.full_messages
+      }
   end
 
   def destroy
@@ -27,10 +35,18 @@ class FollowsController < ApplicationController
     followee = User.find_by(id: params[:id])
     followee.follower_count -= 1
     followee.save
-    @follow.destroy
-    render json: {
-      user: @current_user
-    }
+    # フォロー情報の削除に成功した時
+    if @follow.destroy
+      # ログインユーザの情報と、フォローをしていないというステータスを返す
+      render json: {
+        user: @current_user,
+        status: false
+      }
+    else
+      render json:{
+        status: 400,
+        error_messages: @follow.errors.full_messages
+      }
   end
 
   def follower_index
