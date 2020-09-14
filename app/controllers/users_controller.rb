@@ -29,6 +29,8 @@ class UsersController < ApplicationController
     @user = User.find_by(id: params[:id])
     # そのユーザのフォロワー数を取得
     @follower_count = Follow.where(followee_id: params[:id]).count
+    # そのユーザのフォロー数を取得
+    @follow_count = Follow.where(follower_id: params[:id]).count
     # そのユーザの投稿を全て取得し、各投稿にユーザ名とプロフィール画像を紐付け
     @posts = Post.where(user_id: params[:id]).order('created_at DESC')
     @posts_has_user_info = Array.new
@@ -58,7 +60,9 @@ class UsersController < ApplicationController
     #いいねした投稿の一覧表示
     liked_posts: @liked_posts_has_user_info,
     #フォロワー数
-    follower_count: @follower_count
+    follower_count: @follower_count,
+    #フォロー数
+    follow_count: @follow_count
     }
   end
 
