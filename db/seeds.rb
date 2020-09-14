@@ -62,3 +62,10 @@ end
     {follower_id: follower_id, followee_id: followee_id}
   )
 end
+
+10.times do |n|
+  user = User.find_by(id: n+1)
+  user.follower_count = Follow.where(followee_id: n+1).count
+  user.followee_count = Follow.where(follower_id: n+1).count
+  user.save
+end
