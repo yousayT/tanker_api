@@ -3,38 +3,50 @@ class FollowsController < ApplicationController
 
   def create
     #postmanチェック済み（2020/09/10）
-    if !Follow.find_by(follower_id: @current_user.id, followee_id: params[:id])
-      @follow = Follow.new(follower_id: @current_user.id, followee_id: params[:id])
-      # current_userのフォロー数を1増やす
-      @current_user.followee_count += 1
-      @current_user.save
-      # フォローされたユーザのフォロワー数を1増やす
-      followee = User.find_by(id: params[:id])
-      followee.follower_count += 1
-      followee.save
-      @follow.save!
+    @follow = Follow.new(follower_id: @current_user.id, followee_id: params[:id])
+    # current_userのフォロー数を1増やす
+    @current_user.followee_count += 1
+    @current_user.save
+    # フォローされたユーザのフォロワー数を1増やす
+    followee = User.find_by(id: params[:id])
+    followee.follower_count += 1
+    followee.save
+    # フォロー情報の保存に成功した時
+    if @follow.save
+      # ログインユーザの情報と、フォローをしているというステータスを返す
       render json: {
-        user: @current_user
+        user: @current_user,
+        follow_status: true
       }
-    end
+    else
+      render json:{
+        status: 400,
+        error_messages: @follow.errors.full_messages
+      }
   end
 
   def destroy
     #postmanチェック済み(2020/09/10)
-    if !!Follow.find_by(follower_id: @current_user.id, followee_id: params[:id])
-      @follow = Follow.find_by(follower_id: @current_user.id, followee_id: params[:id])
-      # current_userのフォロー数を1減らす
-      @current_user.followee_count -= 1
-      @current_user.save
-      # フォローされていたユーザのフォロワー数を1減らす
-      followee = User.find_by(id: params[:id])
-      followee.follower_count -= 1
-      followee.save
-      @follow.destroy!
+    @follow = Follow.find_by(follower_id: @current_user.id, followee_id: params[:id])
+    # current_userのフォロー数を1減らす
+    @current_user.followee_count -= 1
+    @current_user.save
+    # フォローされていたユーザのフォロワー数を1減らす
+    followee = User.find_by(id: params[:id])
+    followee.follower_count -= 1
+    followee.save
+    # フォロー情報の削除に成功した時
+    if @follow.destroy
+      # ログインユーザの情報と、フォローをしていないというステータスを返す
       render json: {
-        user: @current_user
+        user: @current_user,
+        status: false
       }
-    end
+    else
+      render json:{
+        status: 400,
+        error_messages: @follow.errors.full_messages
+      }
   end
 
   def follower_index
