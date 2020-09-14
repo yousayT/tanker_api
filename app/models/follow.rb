@@ -8,6 +8,6 @@ class Follow < ApplicationRecord
     # 同じフォロー情報は1つまでしか存在できない
     uniqueness: {scope: :follower_id, message: "そのユーザは既にフォローしています"},
     # フォロワーとフォローされている人のidは必ず異なる
-    numericality: {other_than: :follower_id}
+    numericality: {other_than: :follower_id, message: "自分自身はフォローできません"}
   }
 end
