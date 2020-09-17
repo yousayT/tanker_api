@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-
+  namespace 'api' do
     post "users/create" => "users#create"
     get "users/:id" => "users#show"
     post "users/:id/update" => "users#update"
@@ -19,4 +19,5 @@ Rails.application.routes.draw do
     post "posts/:id/like" => "posts#like"
     post "posts/:id/unlike" => "posts#unlike"
     # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  end
 end

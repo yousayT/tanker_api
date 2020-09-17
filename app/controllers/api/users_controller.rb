@@ -1,4 +1,4 @@
-class UsersController < ApplicationController
+class Api::UsersController < ApplicationController
   before_action :authenticate_user, only: [:show, :update, :logout, :destroy]
   before_action :check_user, only: [:update, :destroy]
 

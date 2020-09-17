@@ -1,4 +1,4 @@
-class FollowsController < ApplicationController
+class Api::FollowsController < ApplicationController
   before_action :authenticate_user
 
   def create
