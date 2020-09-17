@@ -39,5 +39,8 @@ module Tanker
     # 標準時を日本時間に変更
     config.time_zone = "Tokyo"
     config.active_record.default_timezone = :local
+
+    # エラーメッセージを日本語に変更
+    config.i18n.default_locale = :ja
   end
 end
