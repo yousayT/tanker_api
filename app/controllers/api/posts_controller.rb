@@ -51,7 +51,9 @@ class Api::PostsController < ApplicationController
       @post.likes_count += 1
       @post.save
       render json: {
-        post: @post
+        post: @post,
+        likes_count: @post.likes_count,
+        like_status: true
       }
     # いいね情報の保存に失敗した時
     else
@@ -72,7 +74,9 @@ class Api::PostsController < ApplicationController
       @post.likes_count -= 1
       @post.save
       render json: {
-        post: @post
+        post: @post,
+        likes_count: @post.likes_count,
+        like_status: false
       }
     # 該当のいいね情報が見つからなかった時
     else
