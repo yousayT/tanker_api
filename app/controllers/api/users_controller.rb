@@ -144,6 +144,14 @@ class Api::UsersController < ApplicationController
     @current_user.destroy
   end
 
+  # フォロワーの多い順におすすめユーザを返す
+  def recommend
+    recommended_users = User.order(follower_count: 'DESC').limit(6)
+    render json: {
+      users: recommended_users
+    }
+  end
+
   def check_user
     if params[:id].to_i != @current_user.id
       render json:{
