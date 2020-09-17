@@ -1,5 +1,5 @@
 class Api::UsersController < ApplicationController
-  before_action :authenticate_user, only: [:show, :update, :logout, :destroy]
+  before_action :authenticate_user, only: [:show, :update, :logout, :destroy, :recommend]
   before_action :check_user, only: [:update, :destroy]
 
   def create
