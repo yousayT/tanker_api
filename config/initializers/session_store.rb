@@ -1,4 +1,4 @@
-Rails.application.config.api_only = false
+# Rails.application.config.api_only = false
 if Rails.env.production?
   # 本番環境ではredisをsessionの保持に使う
   Rails.application.config.session_store :redis_store,{
