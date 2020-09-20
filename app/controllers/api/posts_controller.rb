@@ -26,12 +26,12 @@ class Api::PostsController < ApplicationController
   end
 
   def show
-    #postmanチェック済み（2020/09/11）
+    #postmanチェック済み（2020/09/20）
     @post = Post.find_by(id: params[:id])
     @user = User.find_by(id: @post.user_id)
-    # 投稿そのものとその投稿に紐づいたユーザ情報、プロフィール画像のソースを返す
+    # 投稿そのものとその投稿に紐づいたユーザ情報、プロフィール画像のソース、ログインユーザがいいねしているかどうかのステータスを返す
     render json: {
-      post: fetch_user_info_from_post(@post)
+      post: fetch_infos_from_post(@post)
     }
   end
 

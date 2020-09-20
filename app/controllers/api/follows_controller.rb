@@ -98,14 +98,14 @@ class Api::FollowsController < ApplicationController
     @followee_ids.push(@current_user.id)
     # IN句を使って投稿を配列で取得
     @posts = Post.where(created_at: Time.current.ago(3.month)..Time.current, user_id: @followee_ids).order('created_at DESC')
-    # 各postにuser_nameを追加
-    @posts_has_user_info = Array.new
+    # 各postにユーザ名とプロフィール画像、ログインユーザがそのpostをいいねしているかどうかのステータスを追加
+    @posts_has_infos = Array.new
     @posts.each do |post|
-      @posts_has_user_info.push(fetch_user_info_from_post(post))
+      @posts_has_infos.push(fetch_infos_from_post(post))
     end
     # user_nameの入ったpostを返す
     render json: {
-      posts: @posts_has_user_info
+      posts: @posts_has_infos
     }
   end
 
