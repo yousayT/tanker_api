@@ -110,10 +110,14 @@ class Api::UsersController < ApplicationController
       session[:user_id] = @user.id
       puts 'yaaaaaaay'
       puts session[:user_id]
-      #ここまで出力される=sessionにちゃんと入ってる
-      render json: {
-        user: @user
-      }
+      if @user.is_frozen
+        render json: {
+          status: 401,
+          error_messages: ["このアカウントは凍結されています"]
+        }
+        render json: {
+          user: @user
+        }
     else
       render json: {
         status: 401
