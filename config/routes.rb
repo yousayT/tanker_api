@@ -14,8 +14,12 @@ Rails.application.routes.draw do
     post "posts/:id/like" => "posts#like"
     post "posts/:id/unlike" => "posts#unlike"
 
+    resources :requests, only: [:create]
+
     namespace 'admin' do
       resources :users, only: [:index]
+      resources :requests, only: [:index, :show]
+      post "requests/:id/switch" => "requests#switch"
     end
     # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   end
