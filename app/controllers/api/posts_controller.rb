@@ -1,5 +1,6 @@
 class Api::PostsController < ApplicationController
   before_action :authenticate_user
+  before_action :is_frozen?
   before_action :check_user, only: :destroy
 
   def create

@@ -1,5 +1,6 @@
 class Api::UsersController < ApplicationController
   before_action :authenticate_user, only: [:show, :update, :logout, :destroy]
+  before_action :is_frozen?, only:[:show, :update, :logout, :destroy]
   before_action :check_user, only: [:update, :destroy]
 
   def create
@@ -162,4 +163,3 @@ class Api::UsersController < ApplicationController
   end
 
 end
-

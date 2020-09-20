@@ -1,5 +1,6 @@
 class Api::FollowsController < ApplicationController
   before_action :authenticate_user
+  before_action :is_frozen?
 
   def create
     #postmanチェック済み（2020/09/10）
