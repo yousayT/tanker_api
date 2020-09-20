@@ -15,6 +15,10 @@
   )
 end
 
+user = User.find_by(id: 1)
+user.is_admin = true
+user.save
+
 [
   ["content1", 9],
   ["content2", 8],
