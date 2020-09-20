@@ -20,6 +20,15 @@ class ApplicationController < ActionController::API
     end
   end
 
+  def is_frozen?
+    if @current_user.is_frozen
+      render json: {
+        status: 401,
+        error_messages: ["このアカウントは凍結されています"]
+      }
+    end
+  end
+
   def protect_from_forgery
   end
 
