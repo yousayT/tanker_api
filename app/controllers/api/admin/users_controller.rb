@@ -3,7 +3,7 @@ class Api::Admin::UsersController < ApplicationController
 
   # 全てのユーザの一覧を取得
   def index
-    users = User.all
+    users = User.all.order('created_at DESC')
     render json: {
       users: users
     }
