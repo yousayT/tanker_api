@@ -16,7 +16,6 @@ class ApplicationController < ActionController::API
     if @current_user == nil
       render json: {
         status: 401
-        #status: 401を渡すだけでいいのだろうか？まだわかってない
       }
     end
   end
@@ -43,4 +42,13 @@ class ApplicationController < ActionController::API
     end
   end
 
+  private
+  # 管理者のみが行うことのできる操作について、ログインユーザが管理者権限を持っているかどうかをチェックする
+  def check_admin
+    if !@current_user.is_admin
+      render json: {
+        status: 401
+      }
+    end
+  end
 end
