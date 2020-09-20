@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_14_032733) do
+ActiveRecord::Schema.define(version: 2020_09_20_170521) do
 
   create_table "follows", force: :cascade do |t|
     t.integer "follower_id"
@@ -71,6 +71,7 @@ ActiveRecord::Schema.define(version: 2020_09_14_032733) do
     t.string "password_digest"
     t.integer "follower_count", default: 0
     t.integer "followee_count", default: 0
+    t.boolean "is_frozen", default: false
   end
 
 end
