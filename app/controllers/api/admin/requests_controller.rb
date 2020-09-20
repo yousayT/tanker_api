@@ -21,6 +21,12 @@ class Api::Admin::RequestsController < ApplicationController
     }
   end
 
+  # ユーザからのお問い合わせを削除
+  def destroy
+    request = Request.find_by(id: params[:id])
+    request.destroy
+  end
+
   # お問い合わせを既読または未読にする
   def switch
     request = Request.find_by(id: params[:id])

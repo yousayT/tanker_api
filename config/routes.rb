@@ -18,7 +18,7 @@ Rails.application.routes.draw do
 
     namespace 'admin' do
       resources :users, only: [:index]
-      resources :requests, only: [:index, :show]
+      resources :requests, only: [:index, :show, :destroy]
       post "requests/:id/switch" => "requests#switch"
     end
     # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
