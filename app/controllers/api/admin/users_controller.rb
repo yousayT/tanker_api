@@ -9,4 +9,18 @@ class Api::Admin::UsersController < ApplicationController
     }
   end
 
+  # アカウントを凍結させる
+  def freeze
+    user = User.find_by(id: params[:id])
+    user.is_frozen = true
+    user.save
+  end
+
+  # アカウントの凍結を解除する
+  def thaw
+    user = User.find_by(id: params[:id])
+    user.is_frozen = false
+    user.save
+  end
+
 end
