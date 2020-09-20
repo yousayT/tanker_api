@@ -67,6 +67,23 @@ end
   )
 end
 
+[
+  ["title1", "request1", 9],
+  ["title2", "request2", 9],
+  ["title3", "request3", 8],
+  ["title4", "request4", 7],
+  ["title5", "request5", 6],
+  ["title6", "request6", 5],
+  ["title7", "request7", 4],
+  ["title8", "request8", 3],
+  ["title9", "request9", 2],
+  ["title10", "request10", 1]
+].each do |title, content, user_id|
+  Request.create!(
+    {title: title, content: content, user_id: user_id}
+  )
+end
+
 10.times do |n|
   user = User.find_by(id: n + 1)
   user.follower_count = Follow.where(followee_id: n + 1).count
