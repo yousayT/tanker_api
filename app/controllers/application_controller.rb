@@ -24,7 +24,7 @@ class ApplicationController < ActionController::API
   def protect_from_forgery
   end
 
-  def fetch_user_info_from_post(post)
+  def fetch_infos_from_post(post)
     #postmanチェック済み（2020/09/11）
     # postをハッシュに変換
     post_hash = post.attributes
@@ -32,6 +32,13 @@ class ApplicationController < ActionController::API
     # そのpostのデータに紐付いたユーザ名、プロフィール画像を付け加えて返す
     post_hash.store("user_name", user.name)
     post_hash.store("img_src", user.image_name.url)
+    # そのpostをログインユーザがいいねしていたら
+    if Like.find_by(user_id: @current_user.id, post_id: post.id)
+      post_hash.store("like_status", true)
+    # そのpostをログインユーザがいいねしていなかったら
+    else
+      post_hash.store("like_status", false)
+    end
     return post_hash
   end
 

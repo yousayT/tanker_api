@@ -24,40 +24,36 @@ class Api::UsersController < ApplicationController
   end
 
   def show
-    #postmanチェック済み（2020/09/11）
+    #postmanチェック済み（2020/09/20）
     # :idからユーザ情報を入手
     @user = User.find_by(id: params[:id])
-    # そのユーザの投稿を全て取得し、各投稿にユーザ名とプロフィール画像を紐付け
+    # そのユーザの投稿を全て取得し、各投稿にユーザ名とプロフィール画像、その投稿をいいねしているかどうかのステータスを追加
     @posts = Post.where(user_id: params[:id]).order('created_at DESC')
-    @posts_has_user_info = Array.new
+    @posts_has_infos = Array.new
     @posts.each do |post|
-      @posts_has_user_info.push(fetch_user_info_from_post(post))
+      @posts_has_infos.push(fetch_infos_from_post(post))
     end
     @likes = Like.where(user_id: params[:id]).order('created_at DESC')
-    # そのユーザがいいねをしていた場合、いいねした投稿を全て取得し、各投稿にユーザ名とプロフィール画像を紐付け
+    # そのユーザがいいねをしていた場合、いいねした投稿を全て取得し、各投稿にユーザ名とプロフィール画像、その投稿をいいねしているかどうかのステータスを追加
     if (@likes)
-      @liked_posts_has_user_info = Array.new
+      @liked_posts_has_infos = Array.new
       @likes.each do |like|
-        @liked_posts_has_user_info.push(fetch_user_info_from_post(Post.find_by(id: like.post_id)))
+        @liked_posts_has_infos.push(fetch_infos_from_post(Post.find_by(id: like.post_id)))
       end
     # いいねをしていなかった場合、nilを返す
     else
       @liked_posts = nil
     end
-    # ユーザ情報、そのユーザの全投稿、そのユーザがいいねした全ての投稿を返す
-    # ユーザのフォロワー数も追加（by Rintaro Fujii 9/14）
+    # ユーザ情報、そのユーザの全投稿、そのユーザがいいねした全ての投稿、ユーザのid、そのユーザをフォローしているかどうかのステータス、そのユーザのフォロワー数及びフォロー数を返す
     render json: {
     #(このtokenはそのうち消すかも)
     token: @user.token,
-    followee_id: params[:id],
-    follow_status: is_follow?(@user),
     user: @user,
-    posts: @posts_has_user_info,
-    #いいねした投稿の一覧表示
-    liked_posts: @liked_posts_has_user_info,
-    #フォロワー数
+    posts: @posts_has_infos,
+    liked_posts: @liked_posts_has_infos,
+    followee_id: @user.id,
+    follow_status: is_follow?(@user),
     follower_count: @user.follower_count,
-    #フォロー数
     follow_count: @user.followee_count
     }
   end
@@ -158,4 +154,3 @@ class Api::UsersController < ApplicationController
   end
 
 end
-
