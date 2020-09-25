@@ -1,5 +1,5 @@
 class Api::UsersController < ApplicationController
-  before_action :authenticate_user, only: [:show, :update, :logout, :destroy]
+  before_action :authenticate_user, only: [:show, :update, :logout, :destroy, :recommend]
   before_action :check_user, only: [:update, :destroy]
 
   def create
@@ -138,6 +138,14 @@ class Api::UsersController < ApplicationController
   def destroy
     session[:user_id] = nil
     @current_user.destroy
+  end
+
+  # フォロワーの多い順におすすめユーザを返す
+  def recommend
+    recommended_users = User.order(follower_count: 'DESC').limit(6)
+    render json: {
+      users: recommended_users
+    }
   end
 
   def check_user
