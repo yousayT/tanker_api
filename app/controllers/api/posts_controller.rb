@@ -49,6 +49,7 @@ class Api::PostsController < ApplicationController
       # いいねカウントを1増やす
       @post = Post.find_by(id: params[:id])
       @post.likes_count += 1
+      @post.like_users.push(@current_user.id)
       @post.save
       render json: {
         post: @post,
@@ -59,7 +60,7 @@ class Api::PostsController < ApplicationController
     else
       render json: {
         status: 409,
-        error_messages: @like.errors.full_messages
+        error_messages: @like.errors.full_mecssages
       }
     end
   end
