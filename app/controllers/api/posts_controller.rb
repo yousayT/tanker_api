@@ -50,10 +50,12 @@ class Api::PostsController < ApplicationController
       @post = Post.find_by(id: params[:id])
       @post.likes_count += 1
       @post.save
+      # いいね情報をpostの中に入れる
+      post_hash = @post.attributes
+      post_hash.store("like_status", true)
       render json: {
-        post: @post,
-        likes_count: @post.likes_count,
-        like_status: true
+        post: post_hash,
+        likes_count: @post.likes_count
       }
     # いいね情報の保存に失敗した時
     else
@@ -73,10 +75,12 @@ class Api::PostsController < ApplicationController
       @post = Post.find_by(id: params[:id])
       @post.likes_count -= 1
       @post.save
+      # いいね情報をpostの中に入れる
+      post_hash = @post.attributes
+      post_hash.store("like_status", false)
       render json: {
-        post: @post,
-        likes_count: @post.likes_count,
-        like_status: false
+        post: post_hash,
+        likes_count: @post.likes_count
       }
     # 該当のいいね情報が見つからなかった時
     else
