@@ -142,7 +142,12 @@ class Api::UsersController < ApplicationController
 
   # フォロワーの多い順におすすめユーザを返す
   def recommend
-    recommended_users = User.order(follower_count: 'DESC').limit(6)
+    users = User.order(follower_count: 'DESC').limit(6)
+    # フォロー情報を追加する
+    recommended_users = Array.new
+    users.each do |user|
+      recommended_users.push(add_follow_status(user))
+    end
     render json: {
       users: recommended_users
     }

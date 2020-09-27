@@ -42,6 +42,13 @@ class ApplicationController < ActionController::API
     return post_hash
   end
 
+  def add_follow_status(user)
+    # userをハッシュに変換
+    user_hash = user.attributes
+    user_hash.store("follow_status", is_follow?(user))
+    return user_hash
+  end
+
   def is_follow?(user)
     if Follow.find_by(follower_id: @current_user, followee_id: user.id)
       return true
