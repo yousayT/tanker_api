@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_14_032733) do
+ActiveRecord::Schema.define(version: 2020_09_28_050142) do
 
   create_table "follows", force: :cascade do |t|
     t.integer "follower_id"
@@ -65,7 +65,6 @@ ActiveRecord::Schema.define(version: 2020_09_14_032733) do
     t.string "uid"
     t.string "image_name"
     t.string "profile"
-    t.string "token"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "password_digest"
