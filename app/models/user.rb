@@ -1,5 +1,4 @@
 class User < ApplicationRecord
-  has_secure_token
   has_secure_password
   # 画像アップロード機能の追加
   mount_uploader :image_name, UserImageUploader
