@@ -135,7 +135,8 @@ class Api::UsersController < ApplicationController
     recommended_users.each do |recommended_user|
       if i < 6
         if !(is_follow?(recommended_user))
-          unfollowed_reco_users.push(recommended_user)
+          recommended_user_has_follow_status = add_follow_status(recommended_user)
+          unfollowed_reco_users.push(recommended_user_has_follow_status)
           i += 1
         end
       else
