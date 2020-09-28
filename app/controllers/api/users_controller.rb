@@ -117,19 +117,6 @@ class Api::UsersController < ApplicationController
     end
   end
 
-  # def login
-  #   @user = User.find_by(uid: params[:uid], password: params[:password])
-  #   if @user
-  #     @current_user = @user.id
-  #     render json: {
-  #       user: @user,
-  #       token: @user.token
-  #     }
-  #   else
-  #     render status: 401
-  #   end
-  # end
-
   def logout
     session[:user_id] = nil
     @current_user = nil
@@ -142,14 +129,21 @@ class Api::UsersController < ApplicationController
 
   # フォロワーの多い順におすすめユーザを返す
   def recommend
-    users = User.order(follower_count: 'DESC').limit(6)
-    # フォロー情報を追加する
-    recommended_users = Array.new
-    users.each do |user|
-      recommended_users.push(add_follow_status(user))
+    recommended_users = User.order(follower_count: 'DESC').limit(30)
+    unfollowed_reco_users = Array.new
+    i = 0
+    recommended_users.each do |recommended_user|
+      if i < 6
+        if !(is_follow?(recommended_user))
+          unfollowed_reco_users.push(recommended_user)
+          i += 1
+        end
+      else
+        break
+      end
     end
-    render json: {
-      users: recommended_users
+    render json:{
+        users: unfollowed_reco_users
     }
   end
 
