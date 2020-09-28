@@ -10,8 +10,7 @@ class Api::UsersController < ApplicationController
       session[:user_id] = @user.id
       # フロントにログインユーザのデータを返す
       render json: {
-        user: @user,
-        token: @user.token
+        user: @user
       }
     # @userの保存に失敗したら
     else
@@ -46,8 +45,6 @@ class Api::UsersController < ApplicationController
     end
     # ユーザ情報、そのユーザの全投稿、そのユーザがいいねした全ての投稿、ユーザのid、そのユーザをフォローしているかどうかのステータス、そのユーザのフォロワー数及びフォロー数を返す
     render json: {
-    #(このtokenはそのうち消すかも)
-    token: @user.token,
     user: @user,
     posts: @posts_has_infos,
     liked_posts: @liked_posts_has_infos,
