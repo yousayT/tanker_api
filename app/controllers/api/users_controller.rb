@@ -124,6 +124,24 @@ class Api::UsersController < ApplicationController
 
   def destroy
     session[:user_id] = nil
+    liked_post_ids = Like.where(user_id: @current_user.id).pluck(:post_id)
+    liked_posts = Post.where(id: liked_post_ids)
+    liked_posts.each do |liked_post|
+      liked_post.likes_count -= 1
+      liked_post.save
+    end
+    follower_ids = Follow.where(followee_id: @current_user.id).pluck(:follower_id)
+    followers = User.where(id: follower_ids)
+    followers.each do |follower|
+      follower.followee_count -= 1
+      follower.save
+    end
+    followee_ids = Follow.where(follower_id: @current_user.id).pluck(:followee_id)
+    followees = User.where(id: followee_ids)
+    followees.each do |followee|
+      followee.follower_count -= 1
+      followee.save
+    end
     @current_user.destroy
   end
 
