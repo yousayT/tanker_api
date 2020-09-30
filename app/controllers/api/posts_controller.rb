@@ -2,11 +2,10 @@ class Api::PostsController < ApplicationController
   before_action :authenticate_user
   before_action :check_user, only: :destroy
 
+  # 新規投稿
   def create
-    # puts @current_user
-    #postmanチェック済み（2020/09/07）
     @post = Post.new(content: params[:content], user_id: @current_user.id)
-    #フロントからタグの名前の配列が来ることを想定（例：　tag_list: ["tag1", "tag2", ... , "tagn"]）
+    # フロントからタグの名前の配列が来ることを想定（例：　tag_list: ["tag1", "tag2", ... , "tagn"]）
     tag_names = params.permit(tag_list:[])
     if tag_names
       tag_names.each do |tag_name|
@@ -25,8 +24,8 @@ class Api::PostsController < ApplicationController
     end
   end
 
+  # 投稿の詳細
   def show
-    #postmanチェック済み（2020/09/20）
     @post = Post.find_by(id: params[:id])
     @user = User.find_by(id: @post.user_id)
     # 投稿そのものとその投稿に紐づいたユーザ情報、プロフィール画像のソース、ログインユーザがいいねしているかどうかのステータスを返す
@@ -35,12 +34,13 @@ class Api::PostsController < ApplicationController
     }
   end
 
-
+  # 投稿の削除
   def destroy
     @post = Post.find_by(id: params[:id])
     @post.destroy
   end
 
+  # 投稿をいいねする
   def like
     # Likesテーブルにuser_id, post_idのセット作成
     @like = Like.new(user_id: @current_user.id, post_id: params[:id])
@@ -66,6 +66,7 @@ class Api::PostsController < ApplicationController
     end
   end
 
+  # いいねの解除
   def unlike
     # Likesテーブルのuser_id, post_idのセットを削除
     # 該当のいいね情報が見つかった時
@@ -90,10 +91,10 @@ class Api::PostsController < ApplicationController
     end
   end
 
+  # ログインユーザ本人でしか行えない操作について本人かどうかをチェックする
   def check_user
     if Post.find_by(id: params[:id]).user_id != @current_user.id
       render json:{
-        #これであってる？
         status: 403
       }
     end

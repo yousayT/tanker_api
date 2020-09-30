@@ -2,6 +2,7 @@ class Api::UsersController < ApplicationController
   before_action :authenticate_user, only: [:show, :update, :logout, :destroy, :recommend]
   before_action :check_user, only: [:update, :destroy]
 
+  # ユーザの新規作成
   def create
     @user = User.new(user_params)
     # @userの保存に成功したら
@@ -23,8 +24,9 @@ class Api::UsersController < ApplicationController
     end
   end
 
+  # ユーザの詳細表示
+  # ユーザ自身の情報の他に、そのユーザの投稿とそのユーザがいいねした投稿も返す
   def show
-    #postmanチェック済み（2020/09/20）
     # :idからユーザ情報を入手
     @user = User.find_by(id: params[:id])
     # そのユーザの投稿を全て取得し、各投稿にユーザ名とプロフィール画像、その投稿をいいねしているかどうかのステータスを追加
@@ -58,8 +60,9 @@ class Api::UsersController < ApplicationController
     }
   end
 
+  # ユーザ情報の更新
+  # パスワードの変更があるかないかで少し挙動が異なる
   def update
-    #postmanチェック済み（2020/09/09）
     # ここで予想されているパラメータは、"user": {"name": "hogehoge", "uid": "fugafuga", ...}の形
     # 変更前のパスワードが入力されていたら
     if params[:user][:old_password].present?
@@ -100,13 +103,12 @@ class Api::UsersController < ApplicationController
     end
   end
 
+  # ユーザのログイン
   def login
     @user = User.find_by(uid: params[:uid])
     if @user&.authenticate(params[:password])
       session[:user_id] = @user.id
-      puts 'yaaaaaaay'
       puts session[:user_id]
-      #ここまで出力される=sessionにちゃんと入ってる
       render json: {
         user: @user
       }
@@ -117,23 +119,28 @@ class Api::UsersController < ApplicationController
     end
   end
 
+  # ユーザのログアウト
   def logout
     session[:user_id] = nil
     @current_user = nil
   end
 
+  # ユーザの退会
   def destroy
     session[:user_id] = nil
     @current_user.destroy
   end
 
-  # フォロワーの多い順におすすめユーザを返す
+  # フォロワーの多い順に最大６人のおすすめユーザを返す
   def recommend
-    recommended_users = User.order(follower_count: 'DESC').limit(30)
+    # フォロワーの多い順に多めにユーザを取得
+    recommended_users = User.order('follower_count DESC').limit(30)
     unfollowed_reco_users = Array.new
     i = 0
     recommended_users.each do |recommended_user|
+      # おすすめユーザを最大６人まで取得する
       if i < 6
+        # ログインユーザがそのユーザをまだフォローしていなかったらおすすめユーザリストに追加
         if !(is_follow?(recommended_user))
           recommended_user_has_follow_status = add_follow_status(recommended_user)
           unfollowed_reco_users.push(recommended_user_has_follow_status)
@@ -148,6 +155,7 @@ class Api::UsersController < ApplicationController
     }
   end
 
+  # ログインユーザ本人でしか行えない操作について本人かどうかをチェックする
   def check_user
     if params[:id].to_i != @current_user.id
       render json:{
