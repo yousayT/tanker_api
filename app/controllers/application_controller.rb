@@ -4,6 +4,7 @@ class ApplicationController < ActionController::API
   before_action :current_user
   helper_method :current_user
 
+  # ログインユーザを設置
   def current_user
     if session[:user_id]
       @current_user ||= User.find_by(id: session[:user_id])
@@ -12,11 +13,11 @@ class ApplicationController < ActionController::API
     end
   end
 
+  # ログインしているかどうかをチェックする
   def authenticate_user
     if @current_user == nil
       render json: {
         status: 401
-        #status: 401を渡すだけでいいのだろうか？まだわかってない
       }
     end
   end
@@ -24,8 +25,8 @@ class ApplicationController < ActionController::API
   def protect_from_forgery
   end
 
+  # 元データのpostにユーザ名、プロフィール画像、いいねしているかどうかのステータスを加える
   def fetch_infos_from_post(post)
-    #postmanチェック済み（2020/09/11）
     # postをハッシュに変換
     post_hash = post.attributes
     user = User.find_by(id: post.user_id)
@@ -42,6 +43,7 @@ class ApplicationController < ActionController::API
     return post_hash
   end
 
+  # 元データのuserにログインユーザがフォローしているかどうかのステータスを加える
   def add_follow_status(user)
     # userをハッシュに変換
     user_hash = user.attributes
@@ -49,6 +51,7 @@ class ApplicationController < ActionController::API
     return user_hash
   end
 
+  # そのユーザをログインユーザがフォローしているかどうかを判断する
   def is_follow?(user)
     if Follow.find_by(follower_id: @current_user, followee_id: user.id)
       return true
