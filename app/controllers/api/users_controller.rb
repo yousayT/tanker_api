@@ -2,6 +2,8 @@ class Api::UsersController < ApplicationController
   before_action :authenticate_user, only: [:show, :update, :logout, :destroy, :recommend]
   before_action :check_user, only: [:update, :destroy]
 
+  include CarrierwaveBase64Uploader
+
   # ユーザの新規作成
   def create
     @user = User.new(user_params)
@@ -47,7 +49,7 @@ class Api::UsersController < ApplicationController
     end
     # ユーザ情報、そのユーザの全投稿、そのユーザがいいねした全ての投稿、ユーザのid、そのユーザをフォローしているかどうかのステータス、そのユーザのフォロワー数及びフォロー数を返す
     render json: {
-    user: @user,
+    user: fetch_img_src(@user),
     posts: @posts_has_infos,
     liked_posts: @liked_posts_has_infos,
     followee_id: @user.id,
@@ -60,15 +62,17 @@ class Api::UsersController < ApplicationController
   # ユーザ情報の更新
   # パスワードの変更があるかないかで少し挙動が異なる
   def update
+    # image_nameタグにあるbase64にエンコードされた画像データを変換して上書き
+    params[:user][:image_name] = base64_conversion(params[:user][:image_name])
     # ここで予想されているパラメータは、"user": {"name": "hogehoge", "uid": "fugafuga", ...}の形
     # 変更前のパスワードが入力されていたら
     if params[:user][:old_password].present?
       # かつそのパスワードが正しかったら
       if @current_user.authenticate(params[:user][:old_password])
         # 新しいパスワードを含むユーザ情報の更新に成功した時
-        if @current_user.update_attributes(user_params)
+        if @current_user.update(user_params)
           render json:{
-            user: @current_user
+            user: fetch_img_src(@current_user)
           }
         # 新しいパスワードを含むユーザ情報の更新に失敗した時
         else
@@ -86,9 +90,9 @@ class Api::UsersController < ApplicationController
     # 変更前のパスワードが入力されていなかったら
     else
       # ユーザ情報の更新に成功した時
-      if @current_user.update_attributes(user_params)
+      if @current_user.update(user_params)
         render json:{
-          user: @current_user
+          user: fetch_img_src(@current_user)
         }
       # ユーザ情報の更新に失敗した時
       else
@@ -107,7 +111,7 @@ class Api::UsersController < ApplicationController
       session[:user_id] = @user.id
       puts session[:user_id]
       render json: {
-        user: @user
+        user: fetch_img_src(@user)
       }
     else
       render json: {
@@ -157,7 +161,16 @@ class Api::UsersController < ApplicationController
       if i < 6
         # ログインユーザがそのユーザをまだフォローしていなかったらおすすめユーザリストに追加
         if !(is_follow?(recommended_user))
-          recommended_user_has_follow_status = add_follow_status(recommended_user)
+          puts "test"
+          puts fetch_img_src(recommended_user)
+          puts fetch_img_src(recommended_user).class
+          hash = Hash.new
+          puts hash.store("test", 50)
+          puts hash
+          puts fetch_img_src(recommended_user).store("test", 100)
+          recommended_user_has_img_src = fetch_img_src(recommended_user)
+          recommended_user_has_img_src.store("follow_status", false)
+          recommended_user_has_follow_status = recommended_user_has_img_src
           unfollowed_reco_users.push(recommended_user_has_follow_status)
           i += 1
         end
