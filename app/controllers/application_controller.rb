@@ -43,11 +43,10 @@ class ApplicationController < ActionController::API
     return post_hash
   end
 
-  # 元データのuserにログインユーザがフォローしているかどうかのステータスを加える
-  def add_follow_status(user)
-    # userをハッシュに変換
+  # ユーザのプロフィール画像のurlを取得する
+  def fetch_img_src(user)
     user_hash = user.attributes
-    user_hash.store("follow_status", is_follow?(user))
+    user_hash.store("img_src", user.image_name.url)
     return user_hash
   end
 
