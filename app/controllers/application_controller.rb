@@ -25,7 +25,7 @@ class ApplicationController < ActionController::API
   def protect_from_forgery
   end
 
-  # 元データのpostにユーザ名、プロフィール画像、いいねしているかどうかのステータスを加える
+  # 元データのpostにユーザ名、プロフィール画像、いいねしているかどうかのステータスを加え、ハッシュにして返す
   def fetch_infos_from_post(post)
     # postをハッシュに変換
     post_hash = post.attributes
@@ -43,7 +43,7 @@ class ApplicationController < ActionController::API
     return post_hash
   end
 
-  # ユーザのプロフィール画像のurlを取得する
+  # ユーザのプロフィール画像のurlを取得して、ハッシュにして返す
   def fetch_img_src(user)
     user_hash = user.attributes
     user_hash.store("img_src", user.image_name.url)
@@ -51,8 +51,8 @@ class ApplicationController < ActionController::API
   end
 
   # そのユーザをログインユーザがフォローしているかどうかを判断する
-  def is_follow?(user)
-    if Follow.find_by(follower_id: @current_user, followee_id: user.id)
+  def is_follow?(user_id)
+    if Follow.find_by(follower_id: @current_user, followee_id: user_id)
       return true
     else
       return false

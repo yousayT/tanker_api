@@ -53,7 +53,7 @@ class Api::UsersController < ApplicationController
     posts: @posts_has_infos,
     liked_posts: @liked_posts_has_infos,
     followee_id: @user.id,
-    follow_status: is_follow?(@user),
+    follow_status: is_follow?(@user.id),
     follower_count: @user.follower_count,
     follow_count: @user.followee_count
     }
@@ -160,7 +160,7 @@ class Api::UsersController < ApplicationController
       # おすすめユーザを最大６人まで取得する
       if i < 6
         # ログインユーザがそのユーザをまだフォローしていなかったらおすすめユーザリストに追加
-        if !(is_follow?(recommended_user))
+        if !(is_follow?(recommended_user.id))
           puts "test"
           puts fetch_img_src(recommended_user)
           puts fetch_img_src(recommended_user).class
