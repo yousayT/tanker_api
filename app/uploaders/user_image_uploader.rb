@@ -5,7 +5,7 @@ class UserImageUploader < CarrierWave::Uploader::Base
 
   # Choose what kind of storage to use for this uploader:
   if Rails.env.production?
-    strage :fog
+    storage :fog
   else
     storage :file
   end
@@ -58,7 +58,7 @@ class UserImageUploader < CarrierWave::Uploader::Base
 
   # Override the filename of the uploaded files:
   # Avoid using model.id or version_name here, see uploader/store.rb for details.
-  def filename
-    "#{SecureRandom.uuid}.jpg" if original_filename.present?
-  end
+  # def filename
+  #   "#{SecureRandom.uuid}.jpg" if original_filename.present?
+  # end
 end
