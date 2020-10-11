@@ -46,7 +46,11 @@ class ApplicationController < ActionController::API
   # ユーザのプロフィール画像のurlを取得する
   def fetch_img_src(user)
     user_hash = user.attributes
-    user_hash.store("img_src", user.image_name.url)
+    if Rails.env.development?
+      user_hash.store("img_src", "localhost:3000" + user.image_name.url)
+    else
+      user_hash.store("img_src", user.image_name.url)
+    end
     return user_hash
   end
 
