@@ -43,7 +43,22 @@ class ApplicationController < ActionController::API
     return post_hash
   end
 
-  # ユーザのプロフィール画像のurlを取得する
+  # 元データのdmにユーザ名、プロフィール画像を加える
+  def fetch_infos_from_dm(dm)
+    # dmをハッシュに変換
+    dm_hash = dm.attributes
+    user = User.find_by(id: dm.receiver_id)
+    # そのdmのデータに紐付いたユーザ名、プロフィール画像を付け加えて返す
+    dm_hash.store("user_name", user.name)
+    if Rails.env.development?
+      dm_hash.store("img_src", "localhost:3000" + user.image_name.url)
+    else
+      dm_hash.store("img_src", user.image_name.url)
+    end
+    return dm_hash
+  end
+
+  # 元データのuserにプロフィール画像を加える
   def fetch_img_src(user)
     user_hash = user.attributes
     user_hash.store("img_src", user.image_name.url)
