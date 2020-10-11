@@ -62,8 +62,12 @@ class Api::UsersController < ApplicationController
   # ユーザ情報の更新
   # パスワードの変更があるかないかで少し挙動が異なる
   def update
-    # image_nameタグにあるbase64にエンコードされた画像データを変換して上書き
-    params[:user][:image_name] = base64_conversion(params[:user][:image_name])
+    # 画像の変更がなされていたら、base64にエンコードされた画像データに変換して保存
+    if params[:user][:image_name].present?
+      params[:user][:image_name] = base64_conversion(params[:user][:image_name], SecureRandom.uuid)
+      @current_user.image_name = params[:user][:image_name]
+      @current_user.save
+    end
     # ここで予想されているパラメータは、"user": {"name": "hogehoge", "uid": "fugafuga", ...}の形
     # 変更前のパスワードが入力されていたら
     if params[:user][:old_password].present?
@@ -194,7 +198,7 @@ class Api::UsersController < ApplicationController
 
   private
   def user_params
-    params.require(:user).permit(:name, :uid, :image_name, :profile, :password, :password_confirmation)
+    params.require(:user).permit(:name, :uid, :profile, :password, :password_confirmation)
   end
 
 end
