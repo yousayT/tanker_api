@@ -62,7 +62,7 @@ class ApplicationController < ActionController::API
   # 開発環境ならプロフィール画像のurlにlocalhost:3000を追加する
   def set_img_src(user)
     if Rails.env.development?
-      return "localhost:3000" + user.image_name.url
+      return "http://localhost:3000" + user.image_name.url
     else
       return user.image_name.url
     end
