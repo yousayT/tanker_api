@@ -4,5 +4,8 @@ class Dm < ApplicationRecord
 
   validates :content, {presence: true, length: {maximum: 500}}
   validates :sender_id, {presence: true}
-  validates :receiver_id, {presence: true} 
+  validates :receiver_id, {
+    presence: true,
+    numericality: {other_than: :sender_id, message: "自分へDMを送ることはできません"}
+  }
 end
