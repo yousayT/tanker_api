@@ -62,7 +62,9 @@ class Api::FollowsController < ApplicationController
     # フォロワーたちのユーザ情報を取得
     followers = Array.new
     follower_ids.each do |follower_id|
-      followers.push(User.find_by(id: follower_id))
+      follower = fetch_img_src(User.find_by(id: follower_id))
+      follower.store("follow_status", is_follow?(follower_id))
+      followers.push(follower)
     end
     # フォロワーたちの情報とフォロワー数を返す
     render json: {
@@ -78,7 +80,9 @@ class Api::FollowsController < ApplicationController
     # フォローされた人たちのユーザ情報を取得
     followees = Array.new
     followee_ids.each do |followee_id|
-      followees.push(User.find_by(id: followee_id))
+      followee = fetch_img_src(User.find_by(id: followee_id))
+      followee.store("follow_status", is_follow?(followee_id))
+      followees.push(followee)
     end
     # フォローされた人たちの情報とフォロー数を返す
     render json: {
