@@ -4,10 +4,19 @@ class Api::DmsController < ApplicationController
 
   # 過去にDMを送ったことのあるユーザの一覧と最も最近のDMの内容、未読数を返す
   def user_index
-    has_contacted_user_ids = Dm.where(sender_id: @current_user.id).group(:receiver_id).pluck(:receiver_id)
+    user_ids = Dm.where(sender_id: @current_user.id).or(Dm.where(receiver_id: @current_user.id)).order('created_at DESC').pluck(:sender_id, :receiver_id)
+    has_contacted_user_ids = Array.new
+    user_ids.each do |sender_id, receiver_id|
+      if sender_id == @current_user.id
+        has_contacted_user_ids.push(receiver_id)
+      else
+        has_contacted_user_ids.push(sender_id)
+      end
+    end
+    has_contacted_user_ids.uniq!
     has_contacted_users = Array.new
     has_contacted_user_ids.each do |has_contacted_user_id|
-      has_contacted_user = fetch_infos_from_dm(Dm.where(sender_id: @current_user.id, receiver_id: has_contacted_user_id).order('created_at DESC').limit(1))
+      has_contacted_user = fetch_infos_from_dm(Dm.where(sender_id: @current_user.id, receiver_id: has_contacted_user_id).or(Dm.where(sender_id: has_contacted_user_id, receiver_id: @current_user.id)).order('created_at DESC').limit(1)[0])
       unread_count = Dm.where(sender_id: @current_user.id, receiver_id: has_contacted_user_id, is_read: false).count
       has_contacted_user.store("unread_count", unread_count)
       has_contacted_users.push(has_contacted_user)

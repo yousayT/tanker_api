@@ -47,14 +47,14 @@ class ApplicationController < ActionController::API
   def fetch_infos_from_dm(dm)
     # dmをハッシュに変換
     dm_hash = dm.attributes
-    user = User.find_by(id: dm.receiver_id)
+    if dm.sender_id == @current_user.id
+      user = User.find_by(id: dm.receiver_id)
+    else
+      user = User.find_by(id: dm.sender_id)
+    end
     # そのdmのデータに紐付いたユーザ名、プロフィール画像を付け加えて返す
     dm_hash.store("user_name", user.name)
-    if Rails.env.development?
-      dm_hash.store("img_src", "localhost:3000" + user.image_name.url)
-    else
-      dm_hash.store("img_src", user.image_name.url)
-    end
+    dm_hash.store("img_src", set_img_src(user))
     return dm_hash
   end
 
