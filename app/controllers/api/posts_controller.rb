@@ -93,7 +93,7 @@ class Api::PostsController < ApplicationController
 
   # ログインユーザ本人でしか行えない操作について本人かどうかをチェックする
   def check_user
-    if Post.find_by(id: params[:id]).user_id != @current_user.id
+    if Post.find_by(id: params[:id])&.user_id != @current_user.id
       render json:{
         status: 403
       }
