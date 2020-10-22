@@ -11,7 +11,7 @@ class UserImageUploader < CarrierWave::Uploader::Base
     #   # For Rails 3.1+ asset pipeline compatibility:
     #   # ActionController::Base.helpers.asset_path("fallback/" + [version_name, "default.png"].compact.join('_'))
     #
-      "images/fallback/" + [version_name, "default.png"].compact.join('_')
+      "https://tanker-user-image.s3.amazonaws.com/images/fallback/" + [version_name, "default.png"].compact.join('_')
     end
   else
     storage :file
