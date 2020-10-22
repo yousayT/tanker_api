@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
     post "posts/create" => "posts#create"
     get "posts/timeline" => "follows#timeline"
+    get "posts/search" => "posts#search"
     get "posts/:id" => "posts#show"
     post "posts/:id/destroy" => "posts#destroy"
     post "posts/:id/like" => "posts#like"

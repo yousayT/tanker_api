@@ -91,6 +91,40 @@ class Api::PostsController < ApplicationController
     end
   end
 
+  def search
+    searched_posts = Array.new
+    search_words = params[:search_words]&.split(/\p{blank}+/)
+    if params[:tag_list]
+      tagged_posts = Array.new
+      tagged_posts = Post.tagged_with(params[:tag_list])
+      if search_words
+        tagged_posts&.each do |tagged_post|
+          search_words.each do |search_word|
+            if tagged_post.content.match?("#{search_word}")
+              searched_posts.push(tagged_post)
+            end
+          end
+        end
+      else
+        tagged_posts.each do |tagged_post|
+          searched_posts.push(tagged_post)
+        end
+      end
+    else
+      search_words&.each do |search_word|
+        Post.where("content Like ?", "%#{search_word}%").each do |searched_post|
+          searched_posts.push(searched_post)
+        end
+      end
+    end
+    searched_posts.uniq!
+    searched_posts.sort_by! { |e| e.created_at }
+    searched_posts.reverse!
+    render json: {
+      posts: searched_posts
+    }
+  end
+
   # ログインユーザ本人でしか行えない操作について本人かどうかをチェックする
   def check_user
     if Post.find_by(id: params[:id])&.user_id != @current_user.id
