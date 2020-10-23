@@ -39,15 +39,10 @@ class Api::UsersController < ApplicationController
       @posts_has_infos.push(fetch_infos_from_post(post))
     end
     @likes = Like.where(user_id: params[:id]).order('created_at DESC')
-    # そのユーザがいいねをしていた場合、いいねした投稿を全て取得し、各投稿にユーザ名とプロフィール画像、その投稿をいいねしているかどうかのステータスを追加
-    if @likes
-      @liked_posts_has_infos = []
-      @likes.each do |like|
-        @liked_posts_has_infos.push(fetch_infos_from_post(Post.find_by(id: like.post_id)))
-      end
-    # いいねをしていなかった場合、nilを返す
-    else
-      @liked_posts = nil
+    # いいねした投稿を全て取得し、各投稿にユーザ名とプロフィール画像、その投稿をいいねしているかどうかのステータスを追加
+    @liked_posts_has_infos = []
+    @likes&.each do |like|
+      @liked_posts_has_infos.push(fetch_infos_from_post(Post.find_by(id: like.post_id)))
     end
     # ユーザ情報、そのユーザの全投稿、そのユーザがいいねした全ての投稿、ユーザのid、そのユーザをフォローしているかどうかのステータス、そのユーザのフォロワー数及びフォロー数を返す
     render json: {
