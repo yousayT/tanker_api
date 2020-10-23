@@ -8,9 +8,9 @@ ruby '2.6.3'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.0.3', '>= 6.0.3.2'
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3', groups: [test, development], require: false
+gem 'sqlite3', groups: %i[test development], require: false
 
-gem 'pg', groups: [production], require: false
+gem 'pg', groups: :production, require: false
 # Use Puma as the app server
 gem 'puma', '~> 4.1'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
