@@ -9,7 +9,7 @@ class Api::PostsController < ApplicationController
     @post = Post.new(content: params[:content], user_id: @current_user.id)
     # フロントからタグの名前の配列が来ることを想定（例：　tag_list: ["tag1", "tag2", ... , "tagn"]）
     tag_names = params.permit(tag_list: [])
-    tag_names&.each do |tag_name|
+    tag_names[:tag_list]&.each do |tag_name|
       @post.tag_list.add(tag_name)
     end
     if @post.save
