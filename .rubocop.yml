@@ -1,0 +1,24 @@
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  # 自動生成されるファイルをrubocopの対象から除外する
+  Exclude:
+    - bin/*
+    - db/schema.rb
+    - db/migrate/*
+    - vender/**/*
+
+Style/AsciiComments:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Exclude:
+    - app/controllers/api/*
+    - test/channels/application_cable/connection_test.rb
+    - test/test_helper.rb
+
+Naming/MethodParameterName:
+  AllowedNames: dm

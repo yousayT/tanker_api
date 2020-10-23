@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CarrierwaveBase64Uploader
   extend ActiveSupport::Concern
 
@@ -5,9 +7,6 @@ module CarrierwaveBase64Uploader
 
   def base64_conversion(uri_str, filename = 'base64')
     image_data = split_base64(uri_str)
-    puts "test"
-    puts uri_str.match(%r{data:(.*?);(.*?),(.*)$})
-    puts uri_str
     image_data_string = image_data[:data]
     image_data_binary = Base64.decode64(image_data_string)
 
@@ -16,21 +15,18 @@ module CarrierwaveBase64Uploader
     temp_img_file << image_data_binary
     temp_img_file.rewind
 
-    img_params = {:filename => "#{filename}.#{image_data[:extension]}", :type => image_data[:type], :tempfile => temp_img_file}
-    puts img_params
+    img_params = { filename: "#{filename}.#{image_data[:extension]}", type: image_data[:type], tempfile: temp_img_file }
     ActionDispatch::Http::UploadedFile.new(img_params)
   end
 
   def split_base64(uri_str)
-    if uri_str.match(%r{data:(.*?);(.*?),(.*)$})
-      uri = Hash.new
-      uri[:type] = $1
-      uri[:encoder] = $2
-      uri[:data] = $3
-      uri[:extension] = $1.split('/')[1]
-      return uri
-    else
-      return nil
-    end
+    return nil unless uri_str.match(/data:(.*?);(.*?),(.*)$/)
+
+    uri = {}
+    uri[:type] = Regexp.last_match[1]
+    uri[:encoder] = Regexp.last_match[2]
+    uri[:data] = Regexp.last_match[3]
+    uri[:extension] = Regexp.last_match[1].split('/')[1]
+    uri
   end
 end

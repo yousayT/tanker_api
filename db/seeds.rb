@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
 #
@@ -16,19 +18,19 @@
 end
 
 [
-  ["content1", 9],
-  ["content2", 8],
-  ["content3", 7],
-  ["content4", 6],
-  ["content5", 5],
-  ["content6", 4],
-  ["content7", 3],
-  ["content8", 2],
-  ["content9", 1],
-  ["content10", 1]
+  ['content1', 9],
+  ['content2', 8],
+  ['content3', 7],
+  ['content4', 6],
+  ['content5', 5],
+  ['content6', 4],
+  ['content7', 3],
+  ['content8', 2],
+  ['content9', 1],
+  ['content10', 1]
 ].each do |content, user_id|
   Post.create!(
-    {content: content, user_id: user_id}
+    { content: content, user_id: user_id }
   )
 end
 
@@ -43,7 +45,7 @@ end
   [1, 2]
 ].each do |user_id, post_id|
   Like.create!(
-    {user_id: user_id, post_id: post_id}
+    { user_id: user_id, post_id: post_id }
   )
 end
 
@@ -59,7 +61,7 @@ end
   [1, 8]
 ].each do |follower_id, followee_id|
   Follow.create!(
-    {follower_id: follower_id, followee_id: followee_id}
+    { follower_id: follower_id, followee_id: followee_id }
   )
 end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::FollowsController < ApplicationController
   before_action :authenticate_user
 
@@ -21,7 +23,7 @@ class Api::FollowsController < ApplicationController
       }
     # フォロー情報の保存に失敗した時
     else
-      render json:{
+      render json: {
         status: 409,
         error_messages: @follow.errors.full_messages
       }
@@ -31,7 +33,7 @@ class Api::FollowsController < ApplicationController
   # リムーブ（フォロー解除）
   def destroy
     # 該当のフォロー情報が見つかった時
-    if @follow = Follow.find_by(follower_id: @current_user.id, followee_id: params[:id])
+    if (@follow = Follow.find_by(follower_id: @current_user.id, followee_id: params[:id]))
       # フォロー情報の削除に成功した時
       @follow.destroy
       # current_userのフォロー数を1減らす
@@ -49,7 +51,7 @@ class Api::FollowsController < ApplicationController
       }
     # 該当のフォロー情報が見つからなかった時
     else
-      render json:{
+      render json: {
         status: 404
       }
     end
@@ -60,10 +62,10 @@ class Api::FollowsController < ApplicationController
     # そのユーザのフォロワーのidを最近フォローした順に取得
     follower_ids = Follow.where(followee_id: params[:id]).order('created_at DESC').pluck(:follower_id)
     # フォロワーたちのユーザ情報を取得
-    followers = Array.new
+    followers = []
     follower_ids.each do |follower_id|
       follower = fetch_img_src(User.find_by(id: follower_id))
-      follower.store("follow_status", is_follow?(follower_id))
+      follower.store('follow_status', follow?(follower_id))
       followers.push(follower)
     end
     # フォロワーたちの情報とフォロワー数を返す
@@ -78,10 +80,10 @@ class Api::FollowsController < ApplicationController
     # そのユーザにフォローされたユーザのidを最近フォローされた順に取得
     followee_ids = Follow.where(follower_id: params[:id]).order('created_at DESC').pluck(:followee_id)
     # フォローされた人たちのユーザ情報を取得
-    followees = Array.new
+    followees = []
     followee_ids.each do |followee_id|
       followee = fetch_img_src(User.find_by(id: followee_id))
-      followee.store("follow_status", is_follow?(followee_id))
+      followee.store('follow_status', follow?(followee_id))
       followees.push(followee)
     end
     # フォローされた人たちの情報とフォロー数を返す
@@ -98,7 +100,7 @@ class Api::FollowsController < ApplicationController
     # IN句を使って投稿を配列で取得
     @posts = Post.where(created_at: Time.current.ago(3.month)..Time.current, user_id: @followee_ids).order('created_at DESC')
     # 各postにユーザ名とプロフィール画像、ログインユーザがそのpostをいいねしているかどうかのステータスを追加
-    @posts_has_infos = Array.new
+    @posts_has_infos = []
     @posts.each do |post|
       @posts_has_infos.push(fetch_infos_from_post(post))
     end
@@ -107,5 +109,4 @@ class Api::FollowsController < ApplicationController
       posts: @posts_has_infos
     }
   end
-
 end
