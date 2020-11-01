@@ -10,21 +10,14 @@ class Api::UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     # @userの保存に成功したら
-    if @user.save
-      # sessionにuser_idを入れてログイン状態にする
-      session[:user_id] = @user.id
-      # フロントにログインユーザのデータを返す
-      render json: {
-        user: @user
-      }
-    # @userの保存に失敗したら
-    else
-      # HTTPステータスコード400を返して、バリデーションに弾かれていた場合その内容も返す
-      render json: {
-        status: 400,
-        error_messages: @user.errors.full_messages
-      }
-    end
+    response_bad_request(@user) unless @user.save
+
+    # sessionにuser_idを入れてログイン状態にする
+    session[:user_id] = @user.id
+    # フロントにログインユーザのデータを返す
+    render json: {
+      user: @user
+    }
   end
 
   # ユーザの詳細表示
@@ -69,25 +62,13 @@ class Api::UsersController < ApplicationController
     # 変更前のパスワードが入力されていたら
     if params[:user][:old_password].present?
       # かつそのパスワードが正しかったら
-      if @current_user.authenticate(params[:user][:old_password])
-        # 新しいパスワードを含むユーザ情報の更新に成功した時
-        if @current_user.update(user_params)
-          render json: {
-            user: fetch_img_src(@current_user)
-          }
-        # 新しいパスワードを含むユーザ情報の更新に失敗した時
-        else
-          render json: {
-            status: 400,
-            error_messages: @current_user.errors.full_messages
-          }
-        end
-      # 入力されたパスワードが正しくなかったら
-      else
-        render json: {
-          status: 401
-        }
-      end
+      response_unauthorized unless @current_user.authenticate(params[:user][:old_password])
+      # 新しいパスワードを含むユーザ情報の更新に成功した時
+      response_bad_request(@current_user) unless @current_user.update(user_params)
+
+      render json: {
+        user: fetch_img_src(@current_user)
+      }
     # 変更前のパスワードが入力されておらず、ユーザ情報の更新に成功した時
     elsif @current_user.update(user_params)
       render json: {
@@ -95,27 +76,18 @@ class Api::UsersController < ApplicationController
       }
     # ユーザ情報の更新に失敗した時
     else
-      render json: {
-        status: 400,
-        error_messages: @current_user.errors.full_messages
-      }
+      response_bad_request(@current_user)
     end
   end
 
   # ユーザのログイン
   def login
     @user = User.find_by(uid: params[:uid])
-    if @user&.authenticate(params[:password])
-      session[:user_id] = @user.id
-      puts session[:user_id]
-      render json: {
-        user: fetch_img_src(@user)
-      }
-    else
-      render json: {
-        status: 401
-      }
-    end
+    response_unauthorized unless @user&.authenticate(params[:password])
+    session[:user_id] = @user.id
+    render json: {
+      user: fetch_img_src(@user)
+    }
   end
 
   # ユーザのログアウト
@@ -127,24 +99,7 @@ class Api::UsersController < ApplicationController
   # ユーザの退会
   def destroy
     session[:user_id] = nil
-    liked_post_ids = Like.where(user_id: @current_user.id).pluck(:post_id)
-    liked_posts = Post.where(id: liked_post_ids)
-    liked_posts.each do |liked_post|
-      liked_post.likes_count -= 1
-      liked_post.save
-    end
-    follower_ids = Follow.where(followee_id: @current_user.id).pluck(:follower_id)
-    followers = User.where(id: follower_ids)
-    followers.each do |follower|
-      follower.followee_count -= 1
-      follower.save
-    end
-    followee_ids = Follow.where(follower_id: @current_user.id).pluck(:followee_id)
-    followees = User.where(id: followee_ids)
-    followees.each do |followee|
-      followee.follower_count -= 1
-      followee.save
-    end
+    @current_user.reset_counts
     @current_user.destroy
   end
 
@@ -176,9 +131,7 @@ class Api::UsersController < ApplicationController
   def check_user
     return unless params[:id].to_i != @current_user.id
 
-    render json: {
-      status: 403
-    }
+    response_unauthorized
   end
 
   private

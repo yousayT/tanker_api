@@ -23,10 +23,7 @@ class Api::FollowsController < ApplicationController
       }
     # フォロー情報の保存に失敗した時
     else
-      render json: {
-        status: 409,
-        error_messages: @follow.errors.full_messages
-      }
+      response_conflict(@follow)
     end
   end
 
@@ -51,9 +48,7 @@ class Api::FollowsController < ApplicationController
       }
     # 該当のフォロー情報が見つからなかった時
     else
-      render json: {
-        status: 404
-      }
+      response_not_found
     end
   end
 

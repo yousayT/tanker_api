@@ -19,9 +19,7 @@ class ApplicationController < ActionController::API
   def authenticate_user
     return unless @current_user.nil?
 
-    render json: {
-      status: 401
-    }
+    response_unauthorized
   end
 
   # 元データのpostにユーザ名、プロフィール画像、いいねしているかどうかのステータスを加え、ハッシュにして返す
@@ -76,5 +74,35 @@ class ApplicationController < ActionController::API
     return "http://localhost:3000#{user.image_name.url}" if Rails.env.development?
 
     user.image_name.url
+  end
+
+  # 400 Bad Request
+  def response_bad_request(obj)
+    render status: 400, json: {
+      status: 400,
+      error_messages: obj.errors.full_messages
+    }
+  end
+
+  # 401 Unauthorized
+  def response_unauthorized
+    render status: 401, json: {
+      status: 401
+    }
+  end
+
+  # 404 Not Found
+  def response_not_found
+    render status: 404, json: {
+      status: 404
+    }
+  end
+
+  # 409 Conflict
+  def response_conflict(obj)
+    render status: 409, json: {
+      status: 409,
+      error_messages: obj.errors.full_messages
+    }
   end
 end

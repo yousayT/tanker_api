@@ -59,10 +59,7 @@ class Api::PostsController < ApplicationController
       }
     # いいね情報の保存に失敗した時
     else
-      render json: {
-        status: 409,
-        error_messages: @like.errors.full_messages
-      }
+      response_conflict(@like)
     end
   end
 
@@ -85,9 +82,7 @@ class Api::PostsController < ApplicationController
       }
     # 該当のいいね情報が見つからなかった時
     else
-      render json: {
-        status: 404
-      }
+      response_not_found
     end
   end
 
@@ -95,8 +90,6 @@ class Api::PostsController < ApplicationController
   def check_user
     return unless Post.find_by(id: params[:id])&.user_id != @current_user.id
 
-    render json: {
-      status: 403
-    }
+    response_unauthorized
   end
 end
