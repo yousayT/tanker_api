@@ -80,7 +80,14 @@ url: https://github.com/Linpyj/tanker-front
 - app/controllers/api/posts_controller.rbのlike、unlikeアクション
 - app/controllers/api/users_controller.rbのdestroyアクション
 ## 環境構築手順
-
+### Homebrewのインストール
+      /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+### rbenvのインストール
+      brew install rbenv ruby-build
+### rubyのインストール
+      rbenv install 2.6.3
+      rbenv global 2.6.3
+### 
 ## デモ画面
 
 
