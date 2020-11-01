@@ -23,4 +23,25 @@ class User < ApplicationRecord
   validates :password, { presence: true, length: { in: 6..25 }, allow_nil: true }
   validates :uid, { presence: true, uniqueness: true, length: { in: 4..25 } }
   validates :profile, { length: { maximum: 150 } }
+
+  def reset_counts
+    liked_post_ids = Like.where(user_id: id).pluck(:post_id)
+    liked_posts = Post.where(id: liked_post_ids)
+    liked_posts.each do |liked_post|
+      liked_post.likes_count -= 1
+      liked_post.save
+    end
+    follower_ids = Follow.where(followee_id: id).pluck(:follower_id)
+    followers = User.where(id: follower_ids)
+    followers.each do |follower|
+      follower.followee_count -= 1
+      follower.save
+    end
+    followee_ids = Follow.where(follower_id: id).pluck(:followee_id)
+    followees = User.where(id: followee_ids)
+    followees.each do |followee|
+      followee.follower_count -= 1
+      followee.save
+    end
+  end
 end
