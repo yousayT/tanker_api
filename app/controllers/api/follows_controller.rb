@@ -92,6 +92,7 @@ class Api::FollowsController < ApplicationController
   def timeline
     # ログインユーザがフォローしているユーザidを配列で取得
     @followee_ids = Follow.where(follower_id: @current_user.id).pluck(:followee_id)
+    @followee_ids.push(@current_user.id)
     # IN句を使って投稿を配列で取得
     @posts = Post.where(created_at: Time.current.ago(3.month)..Time.current, user_id: @followee_ids).order('created_at DESC')
     # 各postにユーザ名とプロフィール画像、ログインユーザがそのpostをいいねしているかどうかのステータスを追加
