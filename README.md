@@ -5,18 +5,18 @@
 自分の作った短歌を投稿して皆に評価してもらったり、他人の短歌を閲覧したりできます
 
 ## 使用言語・開発環境
-#### サーバーサイド
+### サーバーサイド
 ruby 2.6.3 
 
 ruby on rails 6.0.3
 
-#### フロントエンド
+### フロントエンド
 vue.js  
 
 url: https://github.com/Linpyj/tanker-front
 
 ## 機能一覧
-#### ユーザに関する機能
+### ユーザに関する機能
 - ユーザ新規登録機能
 
   ユーザidとユーザ名、パスワードを登録してユーザの新規登録ができます。
@@ -35,7 +35,7 @@ url: https://github.com/Linpyj/tanker-front
   
   またフォロワーや自分をフォローしている人の一覧を見ることもできます。
 
-#### 投稿に関する機能
+### 投稿に関する機能
 - 短歌投稿機能
 
   「タイムライン」画面で短歌を投稿できます。
@@ -55,7 +55,7 @@ url: https://github.com/Linpyj/tanker-front
   好きな投稿に対して「like」をすることができます。
 
 ## 注力した点
-#### 画像アップロード
+### 画像アップロード
 最も注力したのはユーザのプロフィール画像のアップロード機能です。base64形式で送られた画像ファイルをActionDispatchへと変換し、それをaws S3へと送信してフロントエンドへと反映するという一連の動作を作りあげました。
 
 関連ファイル
@@ -63,14 +63,14 @@ url: https://github.com/Linpyj/tanker-front
 - app/controllers/concerns/carrierwave_base64_uploader.rb
 - app/controllers/application_controller.rb
 - app/controllers/api/users_controller.rbのupdateアクション
-#### サーバーサイドとフロントエンドの分離
+### サーバーサイドとフロントエンドの分離
 サーバーサイドとフロントエンドを別々の言語で構築して接続するのにも注力しました。特にログイン時にセッションを保持する仕組みを作るのには長い時間を割きました。
 
 関連ファイル
 - config/initializers/cors.rb
 - config/initializers/session_store.rb
 - 各種コントローラファイルのアクション内のjsonによるレンダリング処理
-#### カウントデータの整合性の保持
+### カウントデータの整合性の保持
 各ユーザが持っているフォロー数とフォロワー数のカウントデータや、各投稿データが持つ「like」数のカウントデータが実際のデータと食い違うことのないように注意しました。
 
 具体的には、createアクションやdestroyアクションにて、saveメソッドの成功を確認してからカウントの加減を行ったり、users_controller内のdestroyアクションにて、フォロー数や「like」数を再集計するようにしました。
