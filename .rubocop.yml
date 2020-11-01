@@ -22,3 +22,12 @@ Style/ClassAndModuleChildren:
 
 Naming/MethodParameterName:
   AllowedNames: dm
+
+Metrics/AbcSize:
+  Max: 37
+
+Metrics/MethodLength:
+  Max: 20
+
+Layout/LineLength:
+  Max: 130
