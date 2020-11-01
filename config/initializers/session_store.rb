@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Rails.application.config.api_only = false
 if Rails.env.production?
   # # 本番環境ではredisをsessionの保持に使う

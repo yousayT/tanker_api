@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Post < ApplicationRecord
   # タグ機能の追加
   acts_as_taggable
@@ -8,7 +10,7 @@ class Post < ApplicationRecord
 
   validates :content, {
     presence: true,
-    length: {maximum: 50}
+    length: { maximum: 50 }
   }
-  validates :user_id, {presence: true}
+  validates :user_id, { presence: true }
 end
