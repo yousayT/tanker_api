@@ -4,7 +4,7 @@
 短歌共有webアプリです。
 自分の作った短歌を投稿して皆に評価してもらったり、他人の短歌を閲覧したりできます
 
-url: https://vigorous-lamport-f0e2a6.netlify.app
+デプロイ先url: https://vigorous-lamport-f0e2a6.netlify.app
 ## 使用言語・開発環境
 ### サーバーサイド
 ruby 2.6.3 
