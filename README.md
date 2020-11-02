@@ -14,7 +14,7 @@ ruby on rails 6.0.3
 ### フロントエンド
 vue.js  
 
-url: https://github.com/Linpyj/tanker-front
+github url: https://github.com/Linpyj/tanker-front
 
 ## 機能一覧
 ### ユーザに関する機能
