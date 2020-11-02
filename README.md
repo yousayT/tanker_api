@@ -100,6 +100,8 @@ github url: https://github.com/Linpyj/tanker-front
 - ログイン画面
 
   テストアカウントのユーザIDは"uid1"、パスワードは"password1"となっています。
+  
+  ログインの際に少し時間がかかるかもしれません。
 ![スクリーンショット 2020-11-02 9 19 30 1](https://user-images.githubusercontent.com/68543627/97819585-dd901900-1cec-11eb-9080-73e439b62f56.png)
 
 - 新規登録画面
