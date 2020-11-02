@@ -96,6 +96,21 @@ url: https://github.com/Linpyj/tanker-front
 ### テストデータをいれる
       rails db:seed
 ## デモ画面
+- ログイン画面
+
+  テストアカウントのユーザIDは"uid1"、パスワードは"password1"となっています。
+![スクリーンショット 2020-11-02 9 19 30](https://user-images.githubusercontent.com/68543627/97819581-dbc65580-1cec-11eb-8ddd-eed53b61aef8.png)
+
+- 新規登録画面
+![スクリーンショット 2020-11-02 9 19 30 1](https://user-images.githubusercontent.com/68543627/97819585-dd901900-1cec-11eb-9080-73e439b62f56.png)
+
+- タイムライン画面
+
+  ログインに成功するとタイムライン画面に遷移します。ここでは自分と自分のフォロワーの投稿の一覧を見ることができます。またこの画面から短歌の投稿をすることができます。
+![スクリーンショット 2020-11-02 9 19 41](https://user-images.githubusercontent.com/68543627/97819586-dec14600-1cec-11eb-8589-6b127ea08015.png)
+![スクリーンショット 2020-11-02 9 20 06](https://user-images.githubusercontent.com/68543627/97819587-df59dc80-1cec-11eb-985c-87a7e85f35df.png)
+![スクリーンショット 2020-11-02 9 20 14](https://user-images.githubusercontent.com/68543627/97819588-dff27300-1cec-11eb-958f-b2ace426cf18.png)
+![スクリーンショット 2020-11-02 9 20 21](https://user-images.githubusercontent.com/68543627/97819589-e08b0980-1cec-11eb-8b55-0e191590e277.png)
 
 ## 注意点
 ### 動作環境について
