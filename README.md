@@ -87,8 +87,20 @@ url: https://github.com/Linpyj/tanker-front
 ### rubyのインストール
       rbenv install 2.6.3
       rbenv global 2.6.3
-### 
+### リポジトリのクローン
+      git clone https://github.com/yousayT/tanker_api.git
+### bundle install
+      bundle install
+### マイグレーションを行う
+      rails db:migrate
+### テストデータをいれる
+      rails db:seed
 ## デモ画面
 
+## 注意点
+### 動作環境について
+chromeであれば問題なく動作します。safariの場合は環境設定から「プライバシー」の「サイト越えトラッキングを防ぐ」のチェックを外す必要があります。
+### ログイン方法について
+ログイン画面に「Googleログイン」や「Twitterログイン」のボタンがありますが、現在は動作しません。
 
 
